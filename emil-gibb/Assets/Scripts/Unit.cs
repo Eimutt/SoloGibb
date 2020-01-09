@@ -11,6 +11,18 @@ public class Unit : MonoBehaviour
     public int hp;
     public int dmg;
     public int movement;
+
+
+
+    private bool moving;
+    private Stack<Vector3> stack;
+    private Vector3 target;
+    private Vector3 origin;
+    private float t;
+    public float MDurr;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +37,10 @@ public class Unit : MonoBehaviour
             StartMove();
             gridSpawned = true;
         }
+        if (moving)
+        {
+            MoveAlongPath();
+        }
     }
     
     void StartMove()
@@ -35,5 +51,34 @@ public class Unit : MonoBehaviour
     public void Move(Vector3 pos)
     {
         transform.position = pos + new Vector3(0, 0.5f, 0);
+    }
+
+    public void StartMoving(Stack<Vector3> Mstack, Vector3 start)
+    {
+        stack = Mstack;
+        moving = true;
+        target = Mstack.Pop();
+        origin = start;
+        print("target " + target + " origin " + origin);
+    }
+
+    private void MoveAlongPath()
+    {
+        t += Time.deltaTime;
+        transform.position = (1-t) * origin + t * target + new Vector3(0, 0.5f, 0);
+        if(t > MDurr)
+        {
+            t = 0;
+            if( stack.Count == 0)
+            {
+                moving = false;
+            } else
+            {
+                origin = target;
+                target = stack.Pop();
+
+                print("target " + target + " origin " + origin);
+            }
+        }
     }
 }

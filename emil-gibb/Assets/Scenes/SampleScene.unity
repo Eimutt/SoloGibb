@@ -220,6 +220,7 @@ MonoBehaviour:
   hp: 0
   dmg: 0
   movement: 3
+  MDurr: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,6 +598,7 @@ MonoBehaviour:
   hp: 0
   dmg: 0
   movement: 1
+  MDurr: 0
 --- !u!212 &1104078376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -728,7 +730,8 @@ MonoBehaviour:
   enemy: 0
   hp: 0
   dmg: 0
-  movement: 4
+  movement: 8
+  MDurr: 1
 --- !u!212 &1634577634
 SpriteRenderer:
   m_ObjectHideFlags: 0

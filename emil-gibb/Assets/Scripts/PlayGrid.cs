@@ -12,6 +12,7 @@ public class PlayGrid : MonoBehaviour
     public Unit currentUnit;
     public Vector2Int curCell;
     public GridCell[,] gridCells;
+    private Vector2Int[,] prev;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,8 @@ public class PlayGrid : MonoBehaviour
 
         gridCells = new GridCell[size.x, size.y];
         InitGround();
+
+        prev = new Vector2Int[size.x, size.y];
     }
 
     // Update is called once per frame
@@ -48,7 +51,9 @@ public class PlayGrid : MonoBehaviour
                 if (gridCells[cell.x, cell.y].GetReachable())
                 {
                     gridCells[curCell.x, curCell.y].occupied = false;
-                    currentUnit.Move(MoveToCell(currentUnit, cell));
+                    //currentUnit.Move(MoveToCell(currentUnit, cell));
+                    MoveToCell(currentUnit, cell);
+                    currentUnit.StartMoving(GetPath(curCell, new Vector2Int(cell.x, cell.y)), tileMap.CellToWorld(new Vector3Int(curCell.x, curCell.y, 1)));
                     moving = false;
                     currentUnit = null;
                     LightDown();
@@ -74,12 +79,16 @@ public class PlayGrid : MonoBehaviour
 
         tileMap.SetTile(new Vector3Int(3, 3, 0), tilebase[0]);
         tileMap.SetTile(new Vector3Int(3, 4, 0), tilebase[0]);
+        tileMap.SetTile(new Vector3Int(3, 2, 0), tilebase[0]);
         GridCell gC1 = new GridCell();
         GridCell gC2 = new GridCell();
+        GridCell gC3 = new GridCell();
         gC1.SetOrgMoveCost(2);
         gC2.SetOrgMoveCost(2);
+        gC3.SetOrgMoveCost(2);
         gridCells[3, 3] = gC1;
         gridCells[3, 4] = gC2;
+        gridCells[3, 2] = gC3;
     }
 
     public Vector3 MoveToCell(Unit unit, Vector3Int matrixPos)
@@ -122,13 +131,26 @@ public class PlayGrid : MonoBehaviour
         }
     }
 
+    Stack<Vector3> GetPath(Vector2Int start, Vector2Int end)
+    {
+        Stack<Vector3> stack = new Stack<Vector3>();
+        Vector2Int currGCell = end;
+        stack.Push(tileMap.CellToWorld(new Vector3Int(currGCell.x, currGCell.y, 1)));
+        while (prev[currGCell.x, currGCell.y] != start)
+        {
+            currGCell = prev[currGCell.x, currGCell.y];
+            stack.Push(tileMap.CellToWorld(new Vector3Int(currGCell.x, currGCell.y, 1)));
+        }
+        
+        return stack;
+    }
+
     void Djikstra(int steps, Vector2Int pos)
     {
 
         HashSet<Vector2Int> Q = new HashSet<Vector2Int>();
 
         int[,] dist = new int[size.x, size.y];
-        Vector2Int[,] prev = new Vector2Int[size.x, size.y];
         for (int i = 0; i < size.x; i++)
         {
             for(int j = 0; j < size.y; j++)
