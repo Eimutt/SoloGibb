@@ -59,7 +59,6 @@ public class Unit : MonoBehaviour
         moving = true;
         target = Mstack.Pop();
         origin = start;
-        print("target " + target + " origin " + origin);
     }
 
     private void MoveAlongPath()
@@ -76,8 +75,6 @@ public class Unit : MonoBehaviour
             {
                 origin = target;
                 target = stack.Pop();
-
-                print("target " + target + " origin " + origin);
             }
         }
     }

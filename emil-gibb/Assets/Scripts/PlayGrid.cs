@@ -58,6 +58,16 @@ public class PlayGrid : MonoBehaviour
                     currentUnit = null;
                     LightDown();
                 }
+                else if (gridCells[cell.x, cell.y].GetAttackable())
+                {
+                    Attack(cell);
+                }
+                else
+                {
+                    moving = false;
+                    currentUnit = null;
+                    LightDown();
+                }
             }
             
             
@@ -155,7 +165,9 @@ public class PlayGrid : MonoBehaviour
         {
             for(int j = 0; j < size.y; j++)
             {
-                gridCells[i, j].SetReachable(false);
+                gridCells[i, j].GetReachable(false);
+                gridCells[i, j].SetAttackable(false);
+                prev[i, j] = new Vector2Int();
                 dist[i,j] = 1000;
                 Q.Add(new Vector2Int(i, j));
             }
@@ -175,6 +187,10 @@ public class PlayGrid : MonoBehaviour
                 }
             }
             Q.Remove(minV);
+            if(gridCells[minV.x, minV.y].GetState() == GridCell.State.Enemy)
+            {
+                continue;
+            }
             if (minV.x > 0)
             {
                 int alt = dist[minV.x, minV.y] + gridCells[minV.x - 1, minV.y].GetMoveCost();
@@ -217,12 +233,96 @@ public class PlayGrid : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                if(dist[i,j] < steps && !gridCells[i,j].occupied)
+                tileMap.SetColor(new Vector3Int(i, j, 0), new Vector4(0, 1 - (dist[i, j] * 0.1f), 0, 1));
+                if (dist[i, j] < steps && gridCells[i, j].GetState() == GridCell.State.Empty)
                 {
-                    tileMap.SetColor(new Vector3Int(i, j, 0), Color.green);
-                    gridCells[i, j].SetReachable(true);
+                    tileMap.SetColor(new Vector3Int(i, j, 0), new Vector4(0.7f, 0.9f, 0.9f, 1));
+                    gridCells[i, j].GetReachable(true);
                 }
             }
         }
+
+        for (int i = 0; i < size.x; i++)
+        {
+            for (int j = 0; j < size.y; j++)
+            {
+                if (dist[i, j] <= steps && gridCells[i, j].GetState() == GridCell.State.Enemy)
+                {
+                    if (FreeSpace(i, j, steps))
+                    {
+                        tileMap.SetColor(new Vector3Int(i, j, 0), Color.red);
+                        gridCells[i, j].SetAttackable(true);
+                    }
+                }
+            }
+        }
+    }
+
+    bool FreeSpace(int i, int j, int steps)
+    {
+        if (gridCells[i + 1, j].GetReachable() || gridCells[i - 1, j].GetReachable() || gridCells[i, j + 1].GetReachable() || gridCells[i, j - 1].GetReachable())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    Vector3Int GetNeighbour(Vector3Int cell)
+    {
+        if (cell.x > 0)
+        {
+            if (gridCells[cell.x - 1, cell.y].GetReachable())
+            {
+                cell.x--;
+                return cell;
+            } 
+        }
+        if (cell.x < size.x - 1)
+        {
+            if (gridCells[cell.x + 1, cell.y].GetReachable())
+            {
+                cell.x++;
+                return cell;
+            }
+        }
+        if (cell.y > 0)
+        {
+            if (gridCells[cell.x, cell.y - 1].GetReachable())
+            {
+                cell.y--;
+                return cell;
+            }
+        }
+        if (cell.y < size.y - 1)
+        {
+            if (gridCells[cell.x, cell.y + 1].GetReachable())
+            {
+                cell.y++;
+                return cell;
+            }
+        }
+        return cell;
+    }
+
+    void Attack(Vector3Int cell)
+    {
+        if (!CheckAdjacent(cell))
+        {
+            cell = GetNeighbour(cell);
+            gridCells[curCell.x, curCell.y].occupied = false;
+            gridCells[cell.x, cell.y].occupied = true;
+            MoveToCell(currentUnit, cell);
+            currentUnit.StartMoving(GetPath(curCell, new Vector2Int(cell.x, cell.y)), tileMap.CellToWorld(new Vector3Int(curCell.x, curCell.y, 1)));
+        }
+        moving = false;
+        currentUnit = null;
+        LightDown();
+    }
+
+    bool CheckAdjacent(Vector3Int cell)
+    {
+        if (((Mathf.Abs(curCell.x - cell.x) == 1) && (Mathf.Abs(curCell.y - cell.y) == 0)) || ((Mathf.Abs(curCell.x - cell.x) == 0) && (Mathf.Abs(curCell.y - cell.y) == 1)))
+            return true;
+        return false;
     }
 }

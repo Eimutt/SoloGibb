@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class GridCell : MonoBehaviour
 {
+    public enum State { Empty, Friendly, Enemy}
+    private State state;
     public bool occupied;
     public Unit unit;
     private bool reachable;
+    private bool Attackable;
     private int OrgMoveCost;
     private int CurrMoveCost;
     enum Terrain { Grass, Wall}
@@ -23,14 +26,25 @@ public class GridCell : MonoBehaviour
         
     }
 
+    public State GetState()
+    {
+        return state;
+    }
+
     public int GetMoveCost()
     {
+        if (state == State.Enemy)
+        {
+            //return 100;
+        }
         return CurrMoveCost;
+        
     }
 
     public void SetMoveCost(int NewMoveCost)
     {
-         CurrMoveCost = NewMoveCost;
+        CurrMoveCost = NewMoveCost;
+        
     }
 
     public void SetOrgMoveCost(int NewMoveCost)
@@ -44,6 +58,13 @@ public class GridCell : MonoBehaviour
         unit = NewUnit;
         occupied = true;
         //SetMoveCost(1000);
+        if (NewUnit.enemy)
+        {
+            state = State.Enemy;
+        } else
+        {
+            state = State.Friendly;
+        }
     }
 
     public void MoveUnitFrom()
@@ -51,6 +72,7 @@ public class GridCell : MonoBehaviour
         unit = null;
         occupied = false;
         SetMoveCost(OrgMoveCost);
+        state = State.Empty;
     }
 
     public bool GetReachable()
@@ -58,8 +80,18 @@ public class GridCell : MonoBehaviour
         return reachable;
     }
     
-    public void SetReachable(bool value)
+    public void GetReachable(bool value)
     {
         reachable = value;
+    }
+
+    public bool GetAttackable()
+    {
+        return Attackable;
+    }
+
+    public void SetAttackable(bool value)
+    {
+        Attackable = value;
     }
 }
