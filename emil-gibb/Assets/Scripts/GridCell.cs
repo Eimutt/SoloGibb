@@ -12,6 +12,7 @@ public class GridCell : MonoBehaviour
     private bool Attackable;
     private int OrgMoveCost;
     private int CurrMoveCost;
+    private int distance;
     enum Terrain { Grass, Wall}
     Terrain cellT;
     // Start is called before the first frame update
@@ -26,9 +27,25 @@ public class GridCell : MonoBehaviour
         
     }
 
+    public int GetDistance()
+    {
+        return distance;
+    }
+
+    public void SetDistance(int newDistance)
+    {
+        distance = newDistance;
+    }
+
     public State GetState()
     {
         return state;
+    }
+
+
+    public void SetState(State newS)
+    {
+        state = newS;
     }
 
     public int GetMoveCost()
@@ -53,12 +70,11 @@ public class GridCell : MonoBehaviour
         CurrMoveCost = NewMoveCost;
     }
 
-    public void MoveUnitTo(Unit NewUnit)
+    public void MoveUnitTo(bool enemy)
     {
-        unit = NewUnit;
         occupied = true;
         //SetMoveCost(1000);
-        if (NewUnit.enemy)
+        if (enemy)
         {
             state = State.Enemy;
         } else
@@ -69,10 +85,9 @@ public class GridCell : MonoBehaviour
 
     public void MoveUnitFrom()
     {
-        unit = null;
         occupied = false;
         SetMoveCost(OrgMoveCost);
-        state = State.Empty;
+        SetState(State.Empty);
     }
 
     public bool GetReachable()
@@ -80,7 +95,7 @@ public class GridCell : MonoBehaviour
         return reachable;
     }
     
-    public void GetReachable(bool value)
+    public void SetReachable(bool value)
     {
         reachable = value;
     }
@@ -94,4 +109,13 @@ public class GridCell : MonoBehaviour
     {
         Attackable = value;
     }
+
+    public void KillUnit()
+    {
+        SetAttackable(false);
+        SetReachable(false);
+        unit = null;
+        SetState(State.Empty);
+    }
+
 }

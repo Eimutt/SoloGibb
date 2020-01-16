@@ -8,10 +8,12 @@ public class Unit : MonoBehaviour
     public Vector2Int startPos;
     public bool enemy;
     private bool gridSpawned;
-    public int hp;
+    public int MaxHp;
     public int dmg;
     public int movement;
+    private int CurrentHp;
 
+    private Vector3Int cellPos;
 
 
     private bool moving;
@@ -19,63 +21,119 @@ public class Unit : MonoBehaviour
     private Vector3 target;
     private Vector3 origin;
     private float t;
-    public float MDurr;
-
-
+    private HealthBar HpBar;
+    private bool MoveLeft = true;
+    private bool ActionLeft = true;
+    private SpriteRenderer spriteRenderer;
+    private float mSpeed;
+    private bool attacking;
 
     // Start is called before the first frame update
     void Start()
     {
-        playgrid = GameObject.Find("Grid").GetComponent<PlayGrid>();
+        
+    }
+
+    void Awake()
+    {
+        HpBar = GetComponentInChildren<HealthBar>();
+        CurrentHp = MaxHp;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        cellPos.x = startPos.x;
+        cellPos.y = startPos.y;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gridSpawned)
-        {
-            StartMove();
-            gridSpawned = true;
-        }
         if (moving)
         {
             MoveAlongPath();
         }
-    }
-    
-    void StartMove()
-    {
-        transform.position = playgrid.MoveToCell(this, new Vector3Int(startPos.x, startPos.y, 0)) + new Vector3(0, 0.5f, 0);
-    }
+    } 
 
     public void Move(Vector3 pos)
     {
         transform.position = pos + new Vector3(0, 0.5f, 0);
     }
 
-    public void StartMoving(Stack<Vector3> Mstack, Vector3 start)
+    public void StartMoving(Stack<Vector3> Mstack, Vector3 start, float speed)
     {
+        mSpeed = speed;
         stack = Mstack;
         moving = true;
         target = Mstack.Pop();
         origin = start;
+        MoveLeft = false;
     }
 
     private void MoveAlongPath()
     {
-        t += Time.deltaTime;
+        t += Time.deltaTime * mSpeed;
         transform.position = (1-t) * origin + t * target + new Vector3(0, 0.5f, 0);
-        if(t > MDurr)
+        if(t > 1)
         {
             t = 0;
             if( stack.Count == 0)
             {
                 moving = false;
+                GameObject.Find("GameHandler").GetComponent<CombatHandler>().Resume();
             } else
             {
                 origin = target;
                 target = stack.Pop();
             }
         }
+    }
+
+    public bool TakeDamage(int dmg)
+    {
+        CurrentHp -= dmg;
+        if(CurrentHp <= 0)
+        {
+            Die();
+            return true;
+        }
+        HpBar.SetHealth(MaxHp, CurrentHp);
+        return false;
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    public bool Attack(Unit target)
+    {
+        ActionLeft = false;
+        spriteRenderer.color = Color.gray;
+        return target.TakeDamage(dmg);
+    }
+
+    public void NewTurn()
+    {
+        MoveLeft = true;
+        ActionLeft = true;
+        spriteRenderer.color = Color.white;
+    }
+
+    public bool GetAction()
+    {
+        return ActionLeft;
+    }
+
+    public Vector3Int GetCellPos()
+    {
+        return cellPos;
+    }
+    public void SetCellPos(Vector3Int newPos)
+    {
+        cellPos = newPos;
+
+    }
+
+    public int GetMovement()
+    {
+        return movement;
     }
 }
