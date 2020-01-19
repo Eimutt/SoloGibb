@@ -1251,7 +1251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d6908888cd4ce448a3833d1c8f4cfb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FriendliyUnits:
+  FriendlyUnits:
   - {fileID: 227772836}
   - {fileID: 1634577633}
   EnemyUnits:
@@ -1402,7 +1402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d9594fe9967024687202ba5bd660d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {x: 1, y: 2}
+  startPos: {x: 1, y: 1}
   enemy: 1
   MaxHp: 10
   dmg: 3

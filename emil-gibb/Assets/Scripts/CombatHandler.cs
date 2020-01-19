@@ -4,23 +4,25 @@ using UnityEngine;
 
 public class CombatHandler : MonoBehaviour
 {
-    public List<Unit> FriendliyUnits = new List<Unit>();
+    public List<Unit> FriendlyUnits = new List<Unit>();
     public List<Unit> EnemyUnits = new List<Unit>();
     private PlayGrid playGrid;
-    private bool PlayerTurn = true;
+    private bool playerTurn = true;
     private Unit selected;
     private bool moving = false;
+    private InfluenceMap influenceMap;
     // Start is called before the first frame update
     void Start()
     {
         playGrid = GetComponent<PlayGrid>();
         InitUnits();
+        influenceMap = new InfluenceMap(playGrid.size.x, playGrid.size.y);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PlayerTurn)
+        if (playerTurn)
         {
             if (Input.GetMouseButtonDown(0) && !moving)
             {
@@ -29,7 +31,7 @@ public class CombatHandler : MonoBehaviour
                 {
                     Vector3Int clickPos = playGrid.getCell();
                     clickPos.z = 0;
-                    foreach (Unit unit in FriendliyUnits)
+                    foreach (Unit unit in FriendlyUnits)
                     {
                         if (unit.GetCellPos() == clickPos && unit.GetAction())
                         {
@@ -63,7 +65,7 @@ public class CombatHandler : MonoBehaviour
                             }
                         }
                     }
-                    foreach (Unit unit in FriendliyUnits)
+                    foreach (Unit unit in FriendlyUnits)
                     {
                         if (unit.GetCellPos() == clickPos && unit.GetAction())
                         {
@@ -88,6 +90,15 @@ public class CombatHandler : MonoBehaviour
                 }
             }
         }
+        else //Enemy Turn
+        {
+            foreach (Unit enemy in EnemyUnits)
+            {
+                //playGrid.Djikstra(enemy.GetMovement(), enemy.GetCellPos());
+            }
+            influenceMap.GenerateInfluenceMap(playGrid, EnemyUnits, FriendlyUnits);
+            playerTurn = true;
+        }
     }
 
     public void Resume()
@@ -97,17 +108,18 @@ public class CombatHandler : MonoBehaviour
 
     public void EndTurn()
     {
-        if (PlayerTurn)
+        if (playerTurn)
         {
             //PlayerTurn = false;
-            foreach(Unit unit in FriendliyUnits)
+            foreach(Unit unit in FriendlyUnits)
             {
                 unit.NewTurn();
             }
+            playerTurn = false;
         }
         else
         {
-            PlayerTurn = true;
+            playerTurn = true;
             foreach(Unit unit in EnemyUnits)
             {
                 unit.NewTurn();
@@ -117,7 +129,7 @@ public class CombatHandler : MonoBehaviour
 
     public void InitUnits()
     {
-        foreach (Unit unit in FriendliyUnits)
+        foreach (Unit unit in FriendlyUnits)
         {
             unit.Move(playGrid.GetWorldPos(unit.GetCellPos()));
             playGrid.setState(unit.GetCellPos(), GridCell.State.Friendly);
