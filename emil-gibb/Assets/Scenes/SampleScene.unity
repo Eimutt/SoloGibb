@@ -352,6 +352,7 @@ MonoBehaviour:
   MaxHp: 5
   dmg: 3
   movement: 3
+  range: 1
 --- !u!224 &255567533 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3193536241163733052, guid: 7662165ddc3630b4fac9a78af6c5bd7a,
@@ -1171,6 +1172,7 @@ MonoBehaviour:
   MaxHp: 10
   dmg: 1
   movement: 1
+  range: 0
 --- !u!212 &1104078376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1257,6 +1259,7 @@ MonoBehaviour:
   EnemyUnits:
   - {fileID: 1519347821}
   - {fileID: 1104078375}
+  selected: {fileID: 0}
 --- !u!4 &1155008221
 Transform:
   m_ObjectHideFlags: 0
@@ -1402,11 +1405,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d9594fe9967024687202ba5bd660d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {x: 1, y: 1}
+  startPos: {x: 4, y: 2}
   enemy: 1
   MaxHp: 10
   dmg: 3
   movement: 3
+  range: 0
 --- !u!212 &1519347822
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1539,6 +1543,7 @@ MonoBehaviour:
   MaxHp: 5
   dmg: 3
   movement: 8
+  range: 3
 --- !u!212 &1634577634
 SpriteRenderer:
   m_ObjectHideFlags: 0

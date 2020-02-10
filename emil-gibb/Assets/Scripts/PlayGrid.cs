@@ -14,6 +14,7 @@ public class PlayGrid : MonoBehaviour
     public Vector2Int curCell;
     public GridCell[,] gridCells;
     private Vector2Int[,] prev;
+    private InfluenceMap influenceMap;
     // Start is called before the first frame update
     public void Start()
     {
@@ -27,6 +28,8 @@ public class PlayGrid : MonoBehaviour
         prev = new Vector2Int[size.x, size.y];
 
         InitGround();
+
+        influenceMap = new InfluenceMap(size.x, size.y);
     }
 
     // Update is called once per frame
@@ -177,7 +180,8 @@ public class PlayGrid : MonoBehaviour
         
         //dist[pos.x, pos.y] = 0;
         gridCells[pos.x, pos.y].SetDistance(0);
-        while(Q.Count > 0)
+        gridCells[pos.x, pos.y].SetReachable(false);
+        while (Q.Count > 0)
         {
             int min = 1000;
             Vector2Int minV = new Vector2Int(0, 0);
@@ -255,6 +259,7 @@ public class PlayGrid : MonoBehaviour
             {
                 if (gridCells[i, j].GetDistance() <= steps && gridCells[i, j].GetState() == GridCell.State.Enemy)
                 {
+                    //error if selected unit stands on only free space!!!
                     if (FreeSpace(i, j, steps))
                     {
                         tileMap.SetColor(new Vector3Int(i, j, 0), Color.red);
@@ -265,10 +270,16 @@ public class PlayGrid : MonoBehaviour
         }
     }
 
+    public void selectTile(Vector3Int pos)
+    {
+        tileMap.SetColor(pos, Color.green);
+    }
+
     public float DjikstraInfluence(Vector2Int pos)
     {
         HashSet<Vector2Int> Q = new HashSet<Vector2Int>();
         
+
         for (int i = 0; i < size.x; i++)
         {
             for (int j = 0; j < size.y; j++)
@@ -339,7 +350,7 @@ public class PlayGrid : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                if ( gridCells[i, j].GetState() == GridCell.State.Friendly)
+                if ( gridCells[i, j].GetState() == GridCell.State.Friendly || gridCells[i, j].GetState() == GridCell.State.Enemy)
                 {
                     sum += gridCells[i, j].GetDistance() * gridCells[i, j].GetDistance();
                 }
@@ -347,7 +358,7 @@ public class PlayGrid : MonoBehaviour
         }
         tileMap.SetColor(new Vector3Int(pos.x, pos.y, 0), new Vector4(0, 1 - (sum * 0.007f), 0, 1));
 
-        print("i,j = " + sum);
+        //print("i: " + pos.x + ", j: " + pos.y + ", sum: "+ sum);
         return sum;
     }
 
@@ -448,5 +459,47 @@ public class PlayGrid : MonoBehaviour
         }
 
         return nearestCell;
+    }
+
+    public void GetEnemiesInRange(int range, Vector3Int cell)
+    {
+        int startx = cell.x - range;
+        int starty = cell.y - range;
+        int endx = cell.x + range;
+        int endy = cell.y + range;
+        if(startx < 0)
+        {
+            startx = 0;
+        }
+        if(starty < 0)
+        {
+            starty = 0;
+        }
+        if(endx > size.x)
+        {
+            endx = size.x;
+        }
+        if(endy > size.y)
+        {
+            endy = size.y;
+        }
+        for(int i = startx; i <= endx; i++)
+        {
+            for(int j = starty; j <= endy; j++)
+            {
+                //print("checking tile: " + i + ", " + j);
+                if (gridCells[i, j].GetState() == GridCell.State.Enemy)
+                {
+                    tileMap.SetColor(new Vector3Int(i, j, 0), Color.red);
+                    gridCells[i, j].SetAttackable(true);
+                    //print("enemy on tile: " + i + ", " + j);
+                }
+            }
+        }
+    }
+
+    public void FillInfluenceMap(List<Unit> EnemyUnits, List<Unit> FriendlyUnits)
+    {
+        influenceMap.GenerateInfluenceMap(this, EnemyUnits, FriendlyUnits);
     }
 }

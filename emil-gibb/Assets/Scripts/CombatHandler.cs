@@ -8,15 +8,13 @@ public class CombatHandler : MonoBehaviour
     public List<Unit> EnemyUnits = new List<Unit>();
     private PlayGrid playGrid;
     private bool playerTurn = true;
-    private Unit selected;
+    public Unit selected;
     private bool moving = false;
-    private InfluenceMap influenceMap;
     // Start is called before the first frame update
     void Start()
     {
         playGrid = GetComponent<PlayGrid>();
         InitUnits();
-        influenceMap = new InfluenceMap(playGrid.size.x, playGrid.size.y);
     }
 
     // Update is called once per frame
@@ -33,10 +31,17 @@ public class CombatHandler : MonoBehaviour
                     clickPos.z = 0;
                     foreach (Unit unit in FriendlyUnits)
                     {
-                        if (unit.GetCellPos() == clickPos && unit.GetAction())
+                        if (unit.GetCellPos() == clickPos && unit.HasActionLeft())
                         {
                             selected = unit;
-                            playGrid.Djikstra(unit.GetMovement(), unit.GetCellPos());
+                            playGrid.selectTile(clickPos);
+                            if (selected.HasMoveLeft())
+                            {
+                                playGrid.Djikstra(selected.GetMovement(), selected.GetCellPos());
+                            } else
+                            {
+                                playGrid.GetEnemiesInRange(selected.GetRange(), selected.GetCellPos());
+                            }
                         }
                     }
                 }
@@ -49,16 +54,20 @@ public class CombatHandler : MonoBehaviour
                     {
                         if (unit.GetCellPos() == clickPos && playGrid.GetAttackable(clickPos))
                         {
-                            playGrid.SetReachable(selected.GetCellPos(), true);
-                            Vector3Int nextPos = playGrid.GetBestNeighbour(clickPos);
-                            Stack<Vector3> path = playGrid.GetPath(selected.GetCellPos(), nextPos);
-                            if(path.Count != 0)
+                            if (selected.HasMoveLeft())
                             {
-                                selected.StartMoving(path, playGrid.GetWorldPos(selected.GetCellPos()), 3f);
-                                playGrid.MoveUnit(selected.GetCellPos(), nextPos, false);
-                                selected.SetCellPos(nextPos);
-                                moving = true;
+                                playGrid.SetReachable(selected.GetCellPos(), true);
+                                Vector3Int nextPos = playGrid.GetBestNeighbour(clickPos);
+                                Stack<Vector3> path = playGrid.GetPath(selected.GetCellPos(), nextPos);
+                                if (path.Count != 0)
+                                {
+                                    selected.StartMoving(path, playGrid.GetWorldPos(selected.GetCellPos()), 3f);
+                                    playGrid.MoveUnit(selected.GetCellPos(), nextPos, false);
+                                    selected.SetCellPos(nextPos);
+                                    moving = true;
+                                }
                             }
+                            
                             if (selected.Attack(unit))
                             {
                                 playGrid.ResetTile(clickPos);
@@ -67,20 +76,26 @@ public class CombatHandler : MonoBehaviour
                     }
                     foreach (Unit unit in FriendlyUnits)
                     {
-                        if (unit.GetCellPos() == clickPos && unit.GetAction())
+                        if (unit.GetCellPos() == clickPos && unit.HasActionLeft())
                         {
                             selected = unit;
-                            playGrid.Djikstra(unit.GetMovement(), unit.GetCellPos());
+                            if (selected.HasMoveLeft())
+                            {
+                                playGrid.Djikstra(unit.GetMovement(), unit.GetCellPos());
+                            }
                             targeted = true;
                         }
                     }
-                    if (playGrid.GetReachable(clickPos))
+                    if (playGrid.GetReachable(clickPos) && selected.HasMoveLeft())
                     {
                         Stack<Vector3> path = playGrid.GetPath(selected.GetCellPos(), clickPos);
                         selected.StartMoving(path, playGrid.GetWorldPos(selected.GetCellPos()), 3f);
                         playGrid.MoveUnit(selected.GetCellPos(), clickPos, false);
                         selected.SetCellPos(clickPos);
                         moving = true;
+                        targeted = true;
+                        playGrid.LightDown();
+                        playGrid.GetEnemiesInRange(selected.GetRange(), selected.GetCellPos());
                     }
                     if (!targeted)
                     {
@@ -92,11 +107,12 @@ public class CombatHandler : MonoBehaviour
         }
         else //Enemy Turn
         {
+            playGrid.FillInfluenceMap(EnemyUnits, FriendlyUnits);
             foreach (Unit enemy in EnemyUnits)
             {
+
                 //playGrid.Djikstra(enemy.GetMovement(), enemy.GetCellPos());
             }
-            influenceMap.GenerateInfluenceMap(playGrid, EnemyUnits, FriendlyUnits);
             playerTurn = true;
         }
     }

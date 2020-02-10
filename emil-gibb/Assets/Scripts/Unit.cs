@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour
     public int dmg;
     public int movement;
     private int CurrentHp;
+    public int range;
 
     private Vector3Int cellPos;
 
@@ -25,6 +26,7 @@ public class Unit : MonoBehaviour
     private bool MoveLeft = true;
     private bool ActionLeft = true;
     private SpriteRenderer spriteRenderer;
+    private Vector4 startcolor;
     private float mSpeed;
     private bool attacking;
 
@@ -39,6 +41,7 @@ public class Unit : MonoBehaviour
         HpBar = GetComponentInChildren<HealthBar>();
         CurrentHp = MaxHp;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        startcolor = spriteRenderer.color;
         cellPos.x = startPos.x;
         cellPos.y = startPos.y;
     }
@@ -114,12 +117,17 @@ public class Unit : MonoBehaviour
     {
         MoveLeft = true;
         ActionLeft = true;
-        spriteRenderer.color = Color.white;
+        spriteRenderer.color = startcolor;
     }
 
-    public bool GetAction()
+    public bool HasActionLeft()
     {
         return ActionLeft;
+    }
+
+    public bool HasMoveLeft()
+    {
+        return MoveLeft;
     }
 
     public Vector3Int GetCellPos()
@@ -135,5 +143,10 @@ public class Unit : MonoBehaviour
     public int GetMovement()
     {
         return movement;
+    }
+
+    public int GetRange()
+    {
+        return range;
     }
 }
