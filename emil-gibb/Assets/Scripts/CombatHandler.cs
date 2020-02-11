@@ -38,6 +38,8 @@ public class CombatHandler : MonoBehaviour
                             if (selected.HasMoveLeft())
                             {
                                 playGrid.Djikstra(selected.GetMovement(), selected.GetCellPos());
+
+                                playGrid.GetEnemiesInRange(selected.GetRange(), selected.GetCellPos());
                             } else
                             {
                                 playGrid.GetEnemiesInRange(selected.GetRange(), selected.GetCellPos());
@@ -78,12 +80,14 @@ public class CombatHandler : MonoBehaviour
                     {
                         if (unit.GetCellPos() == clickPos && unit.HasActionLeft())
                         {
+                            playGrid.deselectTile(selected.GetCellPos());
                             selected = unit;
                             if (selected.HasMoveLeft())
                             {
                                 playGrid.Djikstra(unit.GetMovement(), unit.GetCellPos());
                             }
                             targeted = true;
+                            playGrid.selectTile(clickPos);
                         }
                     }
                     if (playGrid.GetReachable(clickPos) && selected.HasMoveLeft())
@@ -96,6 +100,7 @@ public class CombatHandler : MonoBehaviour
                         targeted = true;
                         playGrid.LightDown();
                         playGrid.GetEnemiesInRange(selected.GetRange(), selected.GetCellPos());
+                        playGrid.selectTile(clickPos);
                     }
                     if (!targeted)
                     {
@@ -130,6 +135,7 @@ public class CombatHandler : MonoBehaviour
             foreach(Unit unit in FriendlyUnits)
             {
                 unit.NewTurn();
+                unit.calculateImportance();
             }
             playerTurn = false;
         }

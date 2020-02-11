@@ -275,6 +275,11 @@ public class PlayGrid : MonoBehaviour
         tileMap.SetColor(pos, Color.green);
     }
 
+    public void deselectTile(Vector3Int pos)
+    {
+        tileMap.SetColor(pos, Color.white);
+    }
+
     public float DjikstraInfluence(Vector2Int pos)
     {
         HashSet<Vector2Int> Q = new HashSet<Vector2Int>();
@@ -475,20 +480,27 @@ public class PlayGrid : MonoBehaviour
         {
             starty = 0;
         }
-        if(endx > size.x)
+        if(endx >= size.x)
         {
-            endx = size.x;
+            endx = size.x - 1;
         }
-        if(endy > size.y)
+        if(endy >= size.y)
         {
-            endy = size.y;
+            endy = size.y - 1;
         }
-        for(int i = startx; i <= endx; i++)
+
+        /*
+        print("Start x: " + startx);
+        print("End x: " + endx);
+        print("Start y: " + starty);
+        print("End y: " + endy);
+        */
+        for (int i = startx; i <= endx; i++)
         {
             for(int j = starty; j <= endy; j++)
             {
                 //print("checking tile: " + i + ", " + j);
-                if (gridCells[i, j].GetState() == GridCell.State.Enemy)
+                if (gridCells[i, j].GetState() == GridCell.State.Enemy && gridDistance(cell.x, cell.y, i, j) <= range)
                 {
                     tileMap.SetColor(new Vector3Int(i, j, 0), Color.red);
                     gridCells[i, j].SetAttackable(true);
@@ -496,6 +508,11 @@ public class PlayGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public int gridDistance(int x1, int y1, int x2, int y2)
+    {
+        return Mathf.Abs(x1 - x2) + Mathf.Abs(y1 - y2);
     }
 
     public void FillInfluenceMap(List<Unit> EnemyUnits, List<Unit> FriendlyUnits)

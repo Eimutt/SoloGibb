@@ -29,7 +29,7 @@ public class Unit : MonoBehaviour
     private Vector4 startcolor;
     private float mSpeed;
     private bool attacking;
-
+    private float importance_value;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +53,13 @@ public class Unit : MonoBehaviour
         {
             MoveAlongPath();
         }
-    } 
+    }
+
+    public void calculateImportance()
+    {
+        importance_value = range * dmg * 1 + (1 - (CurrentHp / MaxHp));
+        print(importance_value);
+    }
 
     public void Move(Vector3 pos)
     {

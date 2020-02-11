@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 227772835}
   - component: {fileID: 227772836}
   m_Layer: 0
-  m_Name: birb
+  m_Name: Melee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,7 +351,7 @@ MonoBehaviour:
   enemy: 0
   MaxHp: 5
   dmg: 3
-  movement: 3
+  movement: 4
   range: 1
 --- !u!224 &255567533 stripped
 RectTransform:
@@ -1172,7 +1172,7 @@ MonoBehaviour:
   MaxHp: 10
   dmg: 1
   movement: 1
-  range: 0
+  range: 1
 --- !u!212 &1104078376
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1372,7 +1372,7 @@ GameObject:
   - component: {fileID: 1519347822}
   - component: {fileID: 1519347821}
   m_Layer: 0
-  m_Name: birb (3)
+  m_Name: gogi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1410,7 +1410,7 @@ MonoBehaviour:
   MaxHp: 10
   dmg: 3
   movement: 3
-  range: 0
+  range: 1
 --- !u!212 &1519347822
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1450,7 +1450,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 3162c73961e35fa4fa19bd4ed1012d7c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 284609b86cfba1044a74577e08555cdc, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1505,7 +1505,7 @@ GameObject:
   - component: {fileID: 1634577634}
   - component: {fileID: 1634577633}
   m_Layer: 0
-  m_Name: birb (2)
+  m_Name: Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1541,9 +1541,9 @@ MonoBehaviour:
   startPos: {x: 1, y: 5}
   enemy: 0
   MaxHp: 5
-  dmg: 3
-  movement: 8
-  range: 3
+  dmg: 2
+  movement: 3
+  range: 2
 --- !u!212 &1634577634
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1583,7 +1583,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 3162c73961e35fa4fa19bd4ed1012d7c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d17e4c879d154144a466a7b219f15d3, type: 3}
   m_Color: {r: 0.042452812, g: 0.47831637, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
