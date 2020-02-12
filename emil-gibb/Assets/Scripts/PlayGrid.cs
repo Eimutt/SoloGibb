@@ -113,7 +113,11 @@ public class PlayGrid : MonoBehaviour
 
     public bool GetReachable(Vector3Int cell)
     {
-        return gridCells[cell.x, cell.y].GetReachable();
+        if (cell.x >= 0 && cell.x < size.x && cell.y >= 0 && cell.y < size.y)
+        {
+            return gridCells[cell.x, cell.y].GetReachable();
+        }
+        return false;
     }
 
     public void SetReachable(Vector3Int cell, bool value)
@@ -159,12 +163,11 @@ public class PlayGrid : MonoBehaviour
         return stack;
     }
 
-    public void Djikstra(int steps, Vector3Int pos)
+    public void Djikstra(int steps, Vector3Int pos, int range)
     {
 
         HashSet<Vector2Int> Q = new HashSet<Vector2Int>();
-
-        int[,] dist = new int[size.x, size.y];
+        
         for (int i = 0; i < size.x; i++)
         {
             for(int j = 0; j < size.y; j++)
@@ -172,15 +175,12 @@ public class PlayGrid : MonoBehaviour
                 gridCells[i, j].SetReachable(false);
                 gridCells[i, j].SetAttackable(false);
                 prev[i, j] = new Vector2Int();
-                //dist[i,j] = 1000;
                 gridCells[i, j].SetDistance(1000);
                 Q.Add(new Vector2Int(i, j));
             }
         }
         
-        //dist[pos.x, pos.y] = 0;
         gridCells[pos.x, pos.y].SetDistance(0);
-        gridCells[pos.x, pos.y].SetReachable(false);
         while (Q.Count > 0)
         {
             int min = 1000;
@@ -203,7 +203,6 @@ public class PlayGrid : MonoBehaviour
                 int alt = gridCells[minV.x, minV.y].GetDistance() + gridCells[minV.x - 1, minV.y].GetMoveCost();
                 if (alt < gridCells[minV.x - 1, minV.y].GetDistance())
                 {
-                    //dist[minV.x - 1, minV.y] = alt;
                     gridCells[minV.x - 1, minV.y].SetDistance(alt);
                     prev[minV.x - 1, minV.y] = minV;
                 }
@@ -213,7 +212,6 @@ public class PlayGrid : MonoBehaviour
                 int alt = gridCells[minV.x, minV.y].GetDistance() + gridCells[minV.x + 1, minV.y].GetMoveCost();
                 if (alt < gridCells[minV.x + 1, minV.y].GetDistance())
                 {
-                    //dist[minV.x + 1, minV.y] = alt;
                     gridCells[minV.x + 1, minV.y].SetDistance(alt);
                     prev[minV.x + 1, minV.y] = minV;
                 }
@@ -223,7 +221,6 @@ public class PlayGrid : MonoBehaviour
                 int alt = gridCells[minV.x, minV.y].GetDistance() + gridCells[minV.x, minV.y - 1].GetMoveCost();
                 if (alt < gridCells[minV.x, minV.y - 1].GetDistance())
                 {
-                    //dist[minV.x, minV.y - 1] = alt;
                     gridCells[minV.x, minV.y - 1].SetDistance(alt);
                     prev[minV.x, minV.y - 1] = minV;
                 }
@@ -233,12 +230,13 @@ public class PlayGrid : MonoBehaviour
                 int alt = gridCells[minV.x, minV.y].GetDistance() + gridCells[minV.x, minV.y + 1].GetMoveCost();
                 if (alt < gridCells[minV.x, minV.y + 1].GetDistance())
                 {
-                    //dist[minV.x, minV.y + 1] = alt;
                     gridCells[minV.x, minV.y + 1].SetDistance(alt);
                     prev[minV.x, minV.y + 1] = minV;
                 }
             }
         }
+
+        gridCells[pos.x, pos.y].SetReachable(true);
 
         for (int i = 0; i < size.x; i++)
         {
@@ -257,29 +255,71 @@ public class PlayGrid : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                if (gridCells[i, j].GetDistance() <= steps && gridCells[i, j].GetState() == GridCell.State.Enemy)
+                if (gridCells[i, j].GetState() == GridCell.State.Enemy)
                 {
-                    //error if selected unit stands on only free space!!!
-                    if (FreeSpace(i, j, steps))
-                    {
-                        tileMap.SetColor(new Vector3Int(i, j, 0), Color.red);
-                        gridCells[i, j].SetAttackable(true);
-                    }
+                    isAttackable(new Vector3Int(i, j, 0), range);
                 }
             }
         }
     }
 
-    public void selectTile(Vector3Int pos)
+    //Needs to choose better square
+    public void isAttackable(Vector3Int cell, int range)
+    {
+        int startx = cell.x - range;
+        int starty = cell.y - range;
+        int endx = cell.x + range;
+        int endy = cell.y + range;
+        if (startx < 0)
+        {
+            startx = 0;
+        }
+        if (starty < 0)
+        {
+            starty = 0;
+        }
+        if (endx >= size.x)
+        {
+            endx = size.x - 1;
+        }
+        if (endy >= size.y)
+        {
+            endy = size.y - 1;
+        }
+        
+        for (int i = startx; i <= endx; i++)
+        {
+            for (int j = starty; j <= endy; j++)
+            {
+                //print("checking tile: " + i + ", " + j);
+                if (gridCells[i, j].GetReachable() && gridDistance(cell.x, cell.y, i, j) <= range)
+                {
+                    tileMap.SetColor(new Vector3Int(cell.x, cell.y, 0), Color.red);
+                    gridCells[cell.x, cell.y].SetAttackableFrom(new Vector3Int(i, j, 0));
+                    print("enemy on tile: " + cell.x + ", " + cell.y + " attackable from: " + i + ", " + j);
+                    return;
+                }
+            }
+        }
+    }
+
+    public Vector3Int GetAttackCell(Vector3Int cell)
+    {
+        return gridCells[cell.x, cell.y].GetAttackableFrom();
+    }
+
+
+    public void SelectTile(Vector3Int pos)
     {
         tileMap.SetColor(pos, Color.green);
     }
-
-    public void deselectTile(Vector3Int pos)
+    
+    public void DeselectTile(Vector3Int pos)
     {
         tileMap.SetColor(pos, Color.white);
     }
 
+    //Used to create influence map
     public float DjikstraInfluence(Vector2Int pos)
     {
         HashSet<Vector2Int> Q = new HashSet<Vector2Int>();
