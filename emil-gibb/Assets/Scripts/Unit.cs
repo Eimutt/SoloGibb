@@ -109,6 +109,7 @@ public class Unit : MonoBehaviour
 
     public void Die()
     {
+        GameObject.Find("GameHandler").GetComponent<CombatHandler>().Resume();
         Destroy(gameObject);
     }
 

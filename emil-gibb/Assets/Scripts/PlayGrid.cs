@@ -251,6 +251,8 @@ public class PlayGrid : MonoBehaviour
             }
         }
 
+
+        //REDO This to loop through enemy list
         for (int i = 0; i < size.x; i++)
         {
             for (int j = 0; j < size.y; j++)
@@ -286,18 +288,19 @@ public class PlayGrid : MonoBehaviour
         {
             endy = size.y - 1;
         }
-        
+
+        int minrange = 1000;
         for (int i = startx; i <= endx; i++)
         {
             for (int j = starty; j <= endy; j++)
             {
                 //print("checking tile: " + i + ", " + j);
-                if (gridCells[i, j].GetReachable() && gridDistance(cell.x, cell.y, i, j) <= range)
+                if (gridCells[i, j].GetReachable() && gridDistance(cell.x, cell.y, i, j) <= range && gridCells[i,j].GetDistance() < minrange)
                 {
+                    minrange = gridCells[i, j].GetDistance();
                     tileMap.SetColor(new Vector3Int(cell.x, cell.y, 0), Color.red);
                     gridCells[cell.x, cell.y].SetAttackableFrom(new Vector3Int(i, j, 0));
                     print("enemy on tile: " + cell.x + ", " + cell.y + " attackable from: " + i + ", " + j);
-                    return;
                 }
             }
         }
