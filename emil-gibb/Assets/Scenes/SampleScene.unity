@@ -1167,7 +1167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d9594fe9967024687202ba5bd660d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {x: 5, y: 3}
+  startPos: {x: 6, y: 3}
   enemy: 1
   MaxHp: 5
   dmg: 2
@@ -1405,7 +1405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d9594fe9967024687202ba5bd660d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {x: 4, y: 2}
+  startPos: {x: 5, y: 4}
   enemy: 1
   MaxHp: 5
   dmg: 1

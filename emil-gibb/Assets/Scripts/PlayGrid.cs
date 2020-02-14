@@ -51,18 +51,18 @@ public class PlayGrid : MonoBehaviour
             }
         }
 
-        tileMap.SetTile(new Vector3Int(3, 3, 0), tilebase[0]);
+        //tileMap.SetTile(new Vector3Int(3, 3, 0), tilebase[0]);
         tileMap.SetTile(new Vector3Int(3, 4, 0), tilebase[0]);
         tileMap.SetTile(new Vector3Int(3, 2, 0), tilebase[0]);
         GridCell gC1 = new GridCell();
         GridCell gC2 = new GridCell();
-        GridCell gC3 = new GridCell();
+        //GridCell gC3 = new GridCell();
         gC1.SetOrgMoveCost(2);
         gC2.SetOrgMoveCost(2);
-        gC3.SetOrgMoveCost(2);
-        gridCells[3, 3] = gC1;
+        //gC3.SetOrgMoveCost(2);
+        gridCells[3, 2] = gC1;
         gridCells[3, 4] = gC2;
-        gridCells[3, 2] = gC3;
+        //gridCells[3, 2] = gC3;
     }
 
     public void ResetTile(Vector3Int cell)
