@@ -29,7 +29,7 @@ public class Unit : MonoBehaviour
     private Vector4 startcolor;
     private float mSpeed;
     private bool attacking;
-    private float importance_value;
+    private float importance_value = 10;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +58,16 @@ public class Unit : MonoBehaviour
     public void calculateImportance()
     {
         importance_value = range * dmg * 1 + (1 - (CurrentHp / MaxHp));
-        print(importance_value);
+    }
+
+    public float getImportance()
+    {
+        return importance_value;
+    }
+
+    public bool isEnemy()
+    {
+        return enemy;
     }
 
     public void Move(Vector3 pos)
@@ -122,6 +131,7 @@ public class Unit : MonoBehaviour
 
     public void NewTurn()
     {
+        print(this.name + " refreshed");
         MoveLeft = true;
         ActionLeft = true;
         spriteRenderer.color = startcolor;

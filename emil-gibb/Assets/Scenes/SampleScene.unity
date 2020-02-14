@@ -349,8 +349,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPos: {x: 1, y: 3}
   enemy: 0
-  MaxHp: 5
-  dmg: 3
+  MaxHp: 15
+  dmg: 4
   movement: 4
   range: 1
 --- !u!224 &255567533 stripped
@@ -1134,7 +1134,7 @@ GameObject:
   - component: {fileID: 1104078376}
   - component: {fileID: 1104078375}
   m_Layer: 0
-  m_Name: birb (1)
+  m_Name: enemy archer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPos: {x: 5, y: 3}
   enemy: 1
-  MaxHp: 10
+  MaxHp: 5
   dmg: 2
   movement: 2
   range: 2
@@ -1407,9 +1407,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPos: {x: 4, y: 2}
   enemy: 1
-  MaxHp: 10
-  dmg: 3
-  movement: 3
+  MaxHp: 5
+  dmg: 1
+  movement: 10
   range: 1
 --- !u!212 &1519347822
 SpriteRenderer:
@@ -1540,7 +1540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPos: {x: 1, y: 5}
   enemy: 0
-  MaxHp: 5
+  MaxHp: 10
   dmg: 2
   movement: 3
   range: 2

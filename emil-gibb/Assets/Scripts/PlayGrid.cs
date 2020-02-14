@@ -71,17 +71,6 @@ public class PlayGrid : MonoBehaviour
     }
 
 
-    public Vector3 MoveToCell(Unit unit, Vector3Int matrixPos)
-    {
-        gridCells[curCell.x, curCell.y].MoveUnitFrom();
-        gridCells[matrixPos.x, matrixPos.y].MoveUnitTo(unit);
-        //gridCells[curCell.x, curCell.y].unit = null;
-        //gridCells[curCell.x, curCell.y].occupied = false;
-        //gridCells[matrixPos.x, matrixPos.y].occupied = true;
-        //gridCells[matrixPos.x, matrixPos.y].unit = unit;
-        return tileMap.CellToWorld(matrixPos);
-    }
-
     public void MoveUnit(Vector3Int from, Vector3Int to, bool enemy)
     {
         gridCells[from.x, from.y].MoveUnitFrom();
@@ -92,8 +81,7 @@ public class PlayGrid : MonoBehaviour
     {
         return gridCells[cell.x, cell.y].GetState();
     }
-
-
+    
     public Vector3 GetWorldPos(Vector3Int matrixPos)
     {
         return tileMap.CellToWorld(matrixPos);
@@ -191,7 +179,7 @@ public class PlayGrid : MonoBehaviour
                 Vector3Int cellpos = target.GetCellPos();
                 if (new Vector2Int(cellpos.x, cellpos.y) == minV)
                 {
-                    print(target.GetCellPos() + "removed");
+                    //print(target.GetCellPos() + "removed");
                     goto END;
                 }
             }
@@ -252,12 +240,12 @@ public class PlayGrid : MonoBehaviour
         
         foreach(Unit target in targets)
         {
-            isAttackable(target.GetCellPos(), range);
+            isAttackableWithMove(target.GetCellPos(), range);
         }
     }
 
     //Needs to choose better square
-    public void isAttackable(Vector3Int cell, int range)
+    public void isAttackableWithMove(Vector3Int cell, int range)
     {
         int startx = cell.x - range;
         int starty = cell.y - range;
@@ -295,6 +283,19 @@ public class PlayGrid : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool isAttackableWithoutMove(Vector3Int targetCell, Vector3Int attackerCell, int range)
+    {
+        if (gridDistance(targetCell.x, targetCell.y, attackerCell.x, attackerCell.y) <= range)
+        {
+            tileMap.SetColor(new Vector3Int(targetCell.x, targetCell.y, 0), Color.red);
+            gridCells[targetCell.x, targetCell.y].SetAttackableFrom(attackerCell);
+            return true;
+        }
+
+        gridCells[targetCell.x, targetCell.y].SetAttackable(false);
+        return false;
     }
 
     public Vector3Int GetAttackCell(Vector3Int cell)
