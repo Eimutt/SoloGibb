@@ -134,21 +134,6 @@ public class PlayGrid : MonoBehaviour
         return gridCells[cell.x, cell.y].GetAttackable();
     }
 
-    /*
-    public Stack<Vector3> GetPath(Vector2Int start, Vector2Int end)
-    {
-        Stack<Vector3> stack = new Stack<Vector3>();
-        Vector2Int currGCell = end;
-        stack.Push(tileMap.CellToWorld(new Vector3Int(currGCell.x, currGCell.y, 1)));
-        while (prev[currGCell.x, currGCell.y] != start)
-        {
-            currGCell = prev[currGCell.x, currGCell.y];
-            stack.Push(tileMap.CellToWorld(new Vector3Int(currGCell.x, currGCell.y, 1)));
-        }
-        
-        return stack;
-    }*/
-
     public Stack<Vector3> GetPath(Vector3Int start, Vector3Int end)
     {
         Stack<Vector3> stack = new Stack<Vector3>();
@@ -422,51 +407,7 @@ public class PlayGrid : MonoBehaviour
         print("Setting cell " + cell + " to " + state);
         gridCells[cell.x, cell.y].SetState(state);
     }
-
-    public void GetEnemiesInRange(int range, Vector3Int cell)
-    {
-        int startx = cell.x - range;
-        int starty = cell.y - range;
-        int endx = cell.x + range;
-        int endy = cell.y + range;
-        if(startx < 0)
-        {
-            startx = 0;
-        }
-        if(starty < 0)
-        {
-            starty = 0;
-        }
-        if(endx >= size.x)
-        {
-            endx = size.x - 1;
-        }
-        if(endy >= size.y)
-        {
-            endy = size.y - 1;
-        }
-
-        /*
-        print("Start x: " + startx);
-        print("End x: " + endx);
-        print("Start y: " + starty);
-        print("End y: " + endy);
-        */
-        for (int i = startx; i <= endx; i++)
-        {
-            for(int j = starty; j <= endy; j++)
-            {
-                //print("checking tile: " + i + ", " + j);
-                if (gridCells[i, j].GetState() == GridCell.State.Enemy && gridDistance(cell.x, cell.y, i, j) <= range)
-                {
-                    tileMap.SetColor(new Vector3Int(i, j, 0), Color.red);
-                    gridCells[i, j].SetAttackable(true);
-                    //print("enemy on tile: " + i + ", " + j);
-                }
-            }
-        }
-    }
-
+    
     public int gridDistance(int x1, int y1, int x2, int y2)
     {
         return Mathf.Abs(x1 - x2) + Mathf.Abs(y1 - y2);
