@@ -40,6 +40,8 @@ public class CombatHandler : MonoBehaviour
                 }
                 else //Unit Selected
                 {
+
+                    playGrid.LightDown();
                     Vector3Int clickPos = playGrid.getCell();
                     GridCell.State state = playGrid.getCellState(clickPos);
                     clickPos.z = 0;
@@ -59,8 +61,6 @@ public class CombatHandler : MonoBehaviour
                         {
                             if (unit.GetCellPos() == clickPos && unit.HasActionLeft())
                             {
-                                //playGrid.DeselectTile(selected.GetCellPos());
-                                playGrid.LightDown();
                                 SelectUnit(unit);
                             }
                         }
@@ -68,19 +68,13 @@ public class CombatHandler : MonoBehaviour
                     {
                         if (playGrid.GetReachable(clickPos) && selected.HasMoveLeft())
                         {
-                            Stack<Vector3> path = playGrid.GetPath(selected.GetCellPos(), clickPos);
-                            selected.StartMoving(path, playGrid.GetWorldPos(selected.GetCellPos()), 3f);
-                            playGrid.MoveUnit(selected.GetCellPos(), clickPos, false);
-                            selected.SetCellPos(clickPos);
-                            moving = true;
-                            playGrid.LightDown();
+                            Move(selected.GetCellPos(), clickPos, selected);
                             GetAttackable(selected);
-                            playGrid.SelectTile(clickPos);
                         } else
                         {
                             selected = null;
-                            playGrid.LightDown();
                         }
+
                     }
                 }
             }
@@ -104,6 +98,7 @@ public class CombatHandler : MonoBehaviour
                     bool canAttack = false;
                     float bestValue = 0;
                     Unit bestTarget = null;
+                    //Check if target in range
                     for (int i = FriendlyUnits.Count - 1; i >= 0; i--)
                     {
                         Unit target = FriendlyUnits[i];
@@ -118,14 +113,15 @@ public class CombatHandler : MonoBehaviour
 
                         }
                     }
+                    //IF target found attack
                     if (canAttack)
                     {
                         Attack(enemy, bestTarget);
                         break;
                     } else
+                    //Find the best square to move to
                     {
                         Vector3Int bestMove = playGrid.GetBestInfluenceMove(EnemyUnits, FriendlyUnits);
-                        //print(enemy + " should move to " + bestMove);
                         Move(enemy.GetCellPos(), bestMove, enemy);
                         enemy.DoAction();
                         break;
@@ -212,6 +208,7 @@ public class CombatHandler : MonoBehaviour
 
     public void Move(Vector3Int start, Vector3Int end, Unit unit)
     {
+        playGrid.SelectTile(end);
         playGrid.SetReachable(start, true);
         Stack<Vector3> path = playGrid.GetPath(start, end);
         if (path.Count != 0)
@@ -273,7 +270,6 @@ public class CombatHandler : MonoBehaviour
                 }
             }
         }
-        playGrid.LightDown();
     }
 
     public void GetAttackable(Unit selected)

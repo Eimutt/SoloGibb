@@ -124,7 +124,6 @@ public class Unit : MonoBehaviour
 
     public bool Attack(Unit target, bool offensive)
     {
-
         print(this.name + " attacks " + target.name + " for " + this.dmg);
         if (offensive)
         {

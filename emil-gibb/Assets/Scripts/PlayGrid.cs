@@ -44,25 +44,29 @@ public class PlayGrid : MonoBehaviour
         {
             for(int j = 0; j < size.y; j++)
             {
-                tileMap.SetTile(new Vector3Int(i, j, 0), tilebase[1]);
-                GridCell gC = new GridCell();
-                gC.SetOrgMoveCost(1);
-                gridCells[i, j] = gC;
+                float value = UnityEngine.Random.Range(0, 100.0f);
+                if(value < 50)
+                {
+                    tileMap.SetTile(new Vector3Int(i, j, 0), tilebase[0]);
+                    GridCell gC = new GridCell();
+                    gC.SetOrgMoveCost(1);
+                    gridCells[i, j] = gC;
+                } else if ( value < 80)
+                {
+                    tileMap.SetTile(new Vector3Int(i, j, 0), tilebase[1]);
+                    GridCell gC = new GridCell();
+                    gC.SetOrgMoveCost(2);
+                    gridCells[i, j] = gC;
+                } else
+                {
+                    tileMap.SetTile(new Vector3Int(i, j, 0), tilebase[2]);
+                    GridCell gC = new GridCell();
+                    gC.SetOrgMoveCost(3);
+                    gridCells[i, j] = gC;
+                }
+
             }
         }
-
-        //tileMap.SetTile(new Vector3Int(3, 3, 0), tilebase[0]);
-        tileMap.SetTile(new Vector3Int(3, 4, 0), tilebase[0]);
-        tileMap.SetTile(new Vector3Int(3, 2, 0), tilebase[0]);
-        GridCell gC1 = new GridCell();
-        GridCell gC2 = new GridCell();
-        //GridCell gC3 = new GridCell();
-        gC1.SetOrgMoveCost(2);
-        gC2.SetOrgMoveCost(2);
-        //gC3.SetOrgMoveCost(2);
-        gridCells[3, 2] = gC1;
-        gridCells[3, 4] = gC2;
-        //gridCells[3, 2] = gC3;
     }
 
     public void ResetTile(Vector3Int cell)

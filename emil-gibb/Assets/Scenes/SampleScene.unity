@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 720998526}
   - component: {fileID: 720998525}
   m_Layer: 0
-  m_Name: gogi (1)
+  m_Name: enemy gogi 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -743,7 +743,7 @@ MonoBehaviour:
   enemy: 1
   MaxHp: 5
   dmg: 1
-  movement: 3
+  movement: 4
   range: 1
 --- !u!212 &720998526
 SpriteRenderer:
@@ -1468,8 +1468,9 @@ MonoBehaviour:
   size: {x: 9, y: 7}
   tileMap: {fileID: 0}
   tilebase:
-  - {fileID: 11400000, guid: 6afe7640ba83715439fa7089c412b884, type: 2}
   - {fileID: 11400000, guid: 52e174660ae18aa44aa6af271837ab12, type: 2}
+  - {fileID: 11400000, guid: 6afe7640ba83715439fa7089c412b884, type: 2}
+  - {fileID: 11400000, guid: ac589e312cb87b24b92f335c04a02f5a, type: 2}
   moving: 0
   currentUnit: {fileID: 0}
   curCell: {x: 0, y: 0}
@@ -1563,7 +1564,7 @@ GameObject:
   - component: {fileID: 1519347822}
   - component: {fileID: 1519347821}
   m_Layer: 0
-  m_Name: gogi
+  m_Name: enemy gogi 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1600,7 +1601,7 @@ MonoBehaviour:
   enemy: 1
   MaxHp: 5
   dmg: 1
-  movement: 3
+  movement: 4
   range: 1
 --- !u!212 &1519347822
 SpriteRenderer:
@@ -1908,7 +1909,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1764612273}
   - component: {fileID: 1764612272}
-  - component: {fileID: 1764612274}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -1943,26 +1943,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1764612274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1764612271}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17b6ae771c096904f97a792fac9196d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  size: {x: 9, y: 7}
-  tileMap: {fileID: 0}
-  tilebase:
-  - {fileID: 11400000, guid: 6afe7640ba83715439fa7089c412b884, type: 2}
-  - {fileID: 11400000, guid: 52e174660ae18aa44aa6af271837ab12, type: 2}
-  moving: 0
-  currentUnit: {fileID: 0}
-  curCell: {x: 0, y: 0}
 --- !u!1 &1870051107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2086,7 +2066,7 @@ GameObject:
   - component: {fileID: 2056317659}
   - component: {fileID: 2056317658}
   m_Layer: 0
-  m_Name: gogi (2)
+  m_Name: enemy gogi 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2123,7 +2103,7 @@ MonoBehaviour:
   enemy: 1
   MaxHp: 5
   dmg: 1
-  movement: 3
+  movement: 4
   range: 1
 --- !u!212 &2056317659
 SpriteRenderer:
