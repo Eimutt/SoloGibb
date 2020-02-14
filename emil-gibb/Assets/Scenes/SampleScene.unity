@@ -1170,8 +1170,8 @@ MonoBehaviour:
   startPos: {x: 5, y: 3}
   enemy: 1
   MaxHp: 10
-  dmg: 1
-  movement: 1
+  dmg: 2
+  movement: 2
   range: 2
 --- !u!212 &1104078376
 SpriteRenderer:
