@@ -1171,7 +1171,7 @@ MonoBehaviour:
   enemy: 1
   MaxHp: 5
   dmg: 2
-  movement: 2
+  movement: 3
   range: 2
 --- !u!212 &1104078376
 SpriteRenderer:
@@ -1409,7 +1409,7 @@ MonoBehaviour:
   enemy: 1
   MaxHp: 5
   dmg: 1
-  movement: 10
+  movement: 3
   range: 1
 --- !u!212 &1519347822
 SpriteRenderer:

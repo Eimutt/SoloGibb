@@ -122,10 +122,13 @@ public class Unit : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public bool Attack(Unit target)
+    public bool Attack(Unit target, bool offensive)
     {
-        ActionLeft = false;
-        spriteRenderer.color = Color.gray;
+        if (offensive)
+        {
+            ActionLeft = false;
+            spriteRenderer.color = Color.gray;
+        }
         return target.TakeDamage(dmg);
     }
 
@@ -140,6 +143,11 @@ public class Unit : MonoBehaviour
     public bool HasActionLeft()
     {
         return ActionLeft;
+    }
+
+    public void DoAction()
+    {
+        ActionLeft = false;
     }
 
     public bool HasMoveLeft()

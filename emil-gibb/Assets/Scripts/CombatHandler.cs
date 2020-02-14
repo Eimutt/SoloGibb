@@ -102,34 +102,54 @@ public class CombatHandler : MonoBehaviour
         }
         else //Enemy Turn
         {
-            //playGrid.FillInfluenceMap(EnemyUnits, FriendlyUnits);
-            foreach (Unit enemy in EnemyUnits)
+            if (!moving)
             {
-                playGrid.Djikstra(enemy, FriendlyUnits);
-                bool canAttack = false;
-                float bestValue = 0;
-                Unit bestTarget = null;
-                for (int i = FriendlyUnits.Count - 1; i >= 0; i--)
+                bool enemyLeft = false;
+                foreach (Unit enemy in EnemyUnits)
                 {
-                    Unit target = FriendlyUnits[i];
-                    if (playGrid.GetAttackable(target.GetCellPos()))
+                    if (enemy.HasActionLeft())
                     {
-                        canAttack = true;
-                        if(target.getImportance() > bestValue)
+                        enemyLeft = true;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    playGrid.Djikstra(enemy, FriendlyUnits);
+                    bool canAttack = false;
+                    float bestValue = 0;
+                    Unit bestTarget = null;
+                    for (int i = FriendlyUnits.Count - 1; i >= 0; i--)
+                    {
+                        Unit target = FriendlyUnits[i];
+                        if (playGrid.GetAttackable(target.GetCellPos()))
                         {
-                            bestTarget = target;
-                            bestValue = target.getImportance();
+                            canAttack = true;
+                            if (target.getImportance() > bestValue)
+                            {
+                                bestTarget = target;
+                                bestValue = target.getImportance();
+                            }
+
                         }
-                        
+                    }
+                    if (canAttack)
+                    {
+                        print(enemy.name + " attacks " + bestTarget.name);
+                        Attack(enemy, bestTarget);
+                        break;
+                    } else
+                    {
+                        Vector3Int bestMove = playGrid.GetBestInfluenceMove(EnemyUnits, FriendlyUnits);
+                        print(enemy + " should move to " + bestMove);
+                        Move(enemy.GetCellPos(), bestMove, enemy);
+                        enemy.DoAction();
+                        break;
                     }
                 }
-                if (canAttack)
-                {
-                    print(enemy.name + " attacks " + bestTarget.name);
-                    Attack(enemy, bestTarget);
-                }
+                if (!enemyLeft)
+                    EndTurn();
             }
-            EndTurn();
         }
     }
 
@@ -175,6 +195,19 @@ public class CombatHandler : MonoBehaviour
         }
     }
 
+    public void Move(Vector3Int start, Vector3Int end, Unit unit)
+    {
+        playGrid.SetReachable(start, true);
+        Stack<Vector3> path = playGrid.GetPath(start, end);
+        if (path.Count != 0)
+        {
+            unit.StartMoving(path, playGrid.GetWorldPos(start), 3f);
+            playGrid.MoveUnit(start, end, unit.isEnemy());
+            unit.SetCellPos(end);
+            moving = true;
+        }
+    }
+
     public void Attack(Unit attacker, Unit target)
     {
         if (attacker.HasMoveLeft())
@@ -192,7 +225,7 @@ public class CombatHandler : MonoBehaviour
         }
 
         //Target Dies
-        if (attacker.Attack(target))
+        if (attacker.Attack(target, true))
         {
             playGrid.ResetTile(target.GetCellPos());
             if (attacker.isEnemy())
@@ -207,7 +240,7 @@ public class CombatHandler : MonoBehaviour
         else if (target.GetRange() >= attacker.GetRange())
         {
             //Attacker Dies
-            if (target.Attack(attacker))
+            if (target.Attack(attacker, false))
             {
                 playGrid.ResetTile(attacker.GetCellPos());
                 if (attacker.isEnemy())

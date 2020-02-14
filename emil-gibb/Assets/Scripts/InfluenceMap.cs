@@ -20,7 +20,7 @@ public class InfluenceMap
         {
             for(int j = 0; j < y; j++)
             {
-                mapScores[i, j] = playGrid.DjikstraInfluence(new Vector2Int(i, j));
+                //mapScores[i, j] = playGrid.DjikstraInfluence(new Vector2Int(i, j));
             }
         }
     }
