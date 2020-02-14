@@ -10,6 +10,7 @@ public class CombatHandler : MonoBehaviour
     private bool playerTurn = true;
     public Unit selected;
     private bool moving = false;
+    private int tabIndex = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,15 +34,7 @@ public class CombatHandler : MonoBehaviour
                     {
                         if (unit.GetCellPos() == clickPos && unit.HasActionLeft())
                         {
-                            selected = unit;
-                            playGrid.SelectTile(clickPos);
-                            if (selected.HasMoveLeft())
-                            {
-                                playGrid.Djikstra(selected, EnemyUnits);
-                            } else
-                            {
-                                GetAttackable(selected);
-                            }
+                            SelectUnit(unit);
                         }
                     }
                 }
@@ -68,15 +61,7 @@ public class CombatHandler : MonoBehaviour
                             {
                                 //playGrid.DeselectTile(selected.GetCellPos());
                                 playGrid.LightDown();
-                                selected = unit;
-                                if (selected.HasMoveLeft())
-                                {
-                                    playGrid.Djikstra(selected, EnemyUnits);
-                                } else
-                                {
-                                    GetAttackable(selected);
-                                }
-                                playGrid.SelectTile(clickPos);
+                                SelectUnit(unit);
                             }
                         }
                     } else if (state == GridCell.State.Empty)
@@ -135,13 +120,12 @@ public class CombatHandler : MonoBehaviour
                     }
                     if (canAttack)
                     {
-                        print(enemy.name + " attacks " + bestTarget.name);
                         Attack(enemy, bestTarget);
                         break;
                     } else
                     {
                         Vector3Int bestMove = playGrid.GetBestInfluenceMove(EnemyUnits, FriendlyUnits);
-                        print(enemy + " should move to " + bestMove);
+                        //print(enemy + " should move to " + bestMove);
                         Move(enemy.GetCellPos(), bestMove, enemy);
                         enemy.DoAction();
                         break;
@@ -156,6 +140,37 @@ public class CombatHandler : MonoBehaviour
     public void Resume()
     {
         moving = false;
+    }
+
+
+    public void SelectUnit(Unit unit)
+    {
+        playGrid.LightDown();
+        selected = unit;
+        if (selected.HasMoveLeft())
+        {
+            playGrid.Djikstra(selected, EnemyUnits);
+        }
+        else
+        {
+            GetAttackable(selected);
+        }
+        playGrid.SelectTile(unit.GetCellPos());
+    }
+
+    public void SelectNextUnit()
+    {
+        for (int i = tabIndex; i < FriendlyUnits.Count; i++)
+        {
+            if (FriendlyUnits[i].HasActionLeft())
+            {
+                SelectUnit(FriendlyUnits[i]);
+                break;
+            }
+        }
+        tabIndex++;
+        if (tabIndex >= FriendlyUnits.Count)
+            tabIndex = 0;
     }
 
     public void EndTurn()
@@ -206,6 +221,11 @@ public class CombatHandler : MonoBehaviour
             unit.SetCellPos(end);
             moving = true;
         }
+    }
+
+    public bool ReadyForInput()
+    {
+        return (!moving && playerTurn);
     }
 
     public void Attack(Unit attacker, Unit target)

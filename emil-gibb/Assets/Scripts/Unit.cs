@@ -124,6 +124,8 @@ public class Unit : MonoBehaviour
 
     public bool Attack(Unit target, bool offensive)
     {
+
+        print(this.name + " attacks " + target.name + " for " + this.dmg);
         if (offensive)
         {
             ActionLeft = false;
@@ -134,7 +136,7 @@ public class Unit : MonoBehaviour
 
     public void NewTurn()
     {
-        print(this.name + " refreshed");
+        //print(this.name + " refreshed");
         MoveLeft = true;
         ActionLeft = true;
         spriteRenderer.color = startcolor;

@@ -282,7 +282,7 @@ public class PlayGrid : MonoBehaviour
                     minrange = gridCells[i, j].GetDistance();
                     tileMap.SetColor(new Vector3Int(cell.x, cell.y, 0), Color.red);
                     gridCells[cell.x, cell.y].SetAttackableFrom(new Vector3Int(i, j, 0));
-                    print("enemy on tile: " + cell.x + ", " + cell.y + " attackable from: " + i + ", " + j);
+                    //print("enemy on tile: " + cell.x + ", " + cell.y + " attackable from: " + i + ", " + j);
                 }
             }
         }
@@ -342,7 +342,7 @@ public class PlayGrid : MonoBehaviour
 
     public void setState(Vector3Int cell, GridCell.State state)
     {
-        print("Setting cell " + cell + " to " + state);
+        //print("Setting cell " + cell + " to " + state);
         gridCells[cell.x, cell.y].SetState(state);
     }
     
@@ -362,7 +362,7 @@ public class PlayGrid : MonoBehaviour
                 if (gridCells[i, j].GetReachable())
                 {
                     float score = DjikstraInfluence(new Vector2Int(i, j), EnemyUnits, FriendlyUnits);
-                    print("score of " + i + ", " + j + " : " + score);
+                    //print("score of " + i + ", " + j + " : " + score);
                     if (score < bestScore)
                     {
                         bestScore = score;

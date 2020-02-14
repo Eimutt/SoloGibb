@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\GridCell.cs" />
      <Compile Include="Assets\Scripts\HealthBar.cs" />
      <Compile Include="Assets\Scripts\InfluenceMap.cs" />
+     <Compile Include="Assets\Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\PathFinding.cs" />
      <Compile Include="Assets\Scripts\PlayGrid.cs" />
      <Compile Include="Assets\Scripts\Unit.cs" />
