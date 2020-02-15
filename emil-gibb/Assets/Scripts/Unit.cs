@@ -30,12 +30,14 @@ public class Unit : MonoBehaviour
     private float mSpeed;
     private bool attacking;
     private float importance_value = 10;
+    private DamageNumberHandler damageNumberHandler;
     // Start is called before the first frame update
     void Start()
     {
         HpBar = GetComponentInChildren<HealthBar>();
         CurrentHp = MaxHp;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        damageNumberHandler = GetComponent<DamageNumberHandler>();
         startcolor = spriteRenderer.color;
         cellPos.x = startPos.x;
         cellPos.y = startPos.y;
@@ -113,6 +115,7 @@ public class Unit : MonoBehaviour
             return true;
         }
         HpBar.SetHealth(MaxHp, CurrentHp);
+        damageNumberHandler.CreateDamageText(dmg);
         return false;
     }
 

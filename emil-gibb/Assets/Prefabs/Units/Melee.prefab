@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7322204493250790892}
   - component: {fileID: 7322204493250790893}
   - component: {fileID: 7322204493250790890}
+  - component: {fileID: -8436168251973981991}
   m_Layer: 0
   m_Name: Melee
   m_TagString: Untagged
@@ -69,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -305617621
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 3162c73961e35fa4fa19bd4ed1012d7c, type: 3}
   m_Color: {r: 0.0141509175, g: 0.341509, b: 1, a: 1}
@@ -101,6 +102,20 @@ MonoBehaviour:
   dmg: 4
   movement: 3
   range: 1
+--- !u!114 &-8436168251973981991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7322204493250790895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdb47196663d79844930e5b58a19db2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultText: {fileID: 5513618440837762473, guid: 4bd16513587e09b468f383db2d3660f5,
+    type: 3}
 --- !u!1001 &7322204493348750582
 PrefabInstance:
   m_ObjectHideFlags: 0
