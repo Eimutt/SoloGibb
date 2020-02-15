@@ -18,10 +18,6 @@ public class PlayGrid : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-    }
-
-    public void Awake()
-    {
         tileMap = GameObject.Find("Tilemap").GetComponent<Tilemap>();
 
         gridCells = new GridCell[size.x, size.y];
@@ -30,6 +26,20 @@ public class PlayGrid : MonoBehaviour
         InitGround();
 
         influenceMap = new InfluenceMap(size.x, size.y);
+    }
+
+    public void Awake()
+    {
+        /*
+        tileMap = GameObject.Find("Tilemap").GetComponent<Tilemap>();
+
+        gridCells = new GridCell[size.x, size.y];
+        prev = new Vector2Int[size.x, size.y];
+
+        InitGround();
+
+        influenceMap = new InfluenceMap(size.x, size.y);
+        */
     }
 
     // Update is called once per frame
@@ -45,13 +55,13 @@ public class PlayGrid : MonoBehaviour
             for(int j = 0; j < size.y; j++)
             {
                 float value = UnityEngine.Random.Range(0, 100.0f);
-                if(value < 50)
+                if(value < 70)
                 {
                     tileMap.SetTile(new Vector3Int(i, j, 0), tilebase[0]);
                     GridCell gC = new GridCell();
                     gC.SetOrgMoveCost(1);
                     gridCells[i, j] = gC;
-                } else if ( value < 80)
+                } else if ( value < 90)
                 {
                     tileMap.SetTile(new Vector3Int(i, j, 0), tilebase[1]);
                     GridCell gC = new GridCell();
@@ -234,14 +244,11 @@ public class PlayGrid : MonoBehaviour
             for (int j = 0; j < size.y; j++)
             {
                 tileMap.SetColor(new Vector3Int(i, j, 0), new Vector4(0, 1 - (gridCells[i, j].GetDistance() * 0.1f), 0, 1));
-                if (gridCells[i, j].GetDistance() < steps && gridCells[i, j].GetState() == GridCell.State.Empty)
+                if (gridCells[i, j].GetDistance() <= steps && gridCells[i, j].GetState() == GridCell.State.Empty)
                 {
-                    tileMap.SetColor(new Vector3Int(i, j, 0), new Vector4(0.7f, 0.9f, 0.9f, 1));
+                    tileMap.SetColor(new Vector3Int(i, j, 0), new Vector4(0.0f, 0.9f, 0.9f, 1));
                     gridCells[i, j].SetReachable(true);
-
                 }
-
-                //print("score of " + i + ", " + j + " : " + gridCells[i, j].GetReachable());
             }
         }
         

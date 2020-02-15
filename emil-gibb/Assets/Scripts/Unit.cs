@@ -33,17 +33,17 @@ public class Unit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
-
-    void Awake()
-    {
         HpBar = GetComponentInChildren<HealthBar>();
         CurrentHp = MaxHp;
         spriteRenderer = GetComponent<SpriteRenderer>();
         startcolor = spriteRenderer.color;
         cellPos.x = startPos.x;
         cellPos.y = startPos.y;
+    }
+
+    void Awake()
+    {
+        
     }
 
     // Update is called once per frame
