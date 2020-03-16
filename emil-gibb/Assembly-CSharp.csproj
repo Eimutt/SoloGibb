@@ -56,9 +56,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CombatHandler.cs" />
+     <Compile Include="Assets\Scripts\CreateEncounter.cs" />
+     <Compile Include="Assets\Scripts\DamageNumber.cs" />
+     <Compile Include="Assets\Scripts\DamageNumberHandler.cs" />
      <Compile Include="Assets\Scripts\GridCell.cs" />
      <Compile Include="Assets\Scripts\HealthBar.cs" />
      <Compile Include="Assets\Scripts\InfluenceMap.cs" />
+     <Compile Include="Assets\Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\PathFinding.cs" />
      <Compile Include="Assets\Scripts\PlayGrid.cs" />
      <Compile Include="Assets\Scripts\Unit.cs" />

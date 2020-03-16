@@ -13,6 +13,7 @@ public class GridCell : MonoBehaviour
     private int OrgMoveCost;
     private int CurrMoveCost;
     private int distance;
+    private Vector3Int attackableFrom;
     enum Terrain { Grass, Wall}
     Terrain cellT;
     // Start is called before the first frame update
@@ -108,6 +109,17 @@ public class GridCell : MonoBehaviour
     public void SetAttackable(bool value)
     {
         Attackable = value;
+    }
+
+    public Vector3Int GetAttackableFrom()
+    {
+        return attackableFrom;
+    }
+
+    public void SetAttackableFrom(Vector3Int cell)
+    {
+        attackableFrom = cell;
+        SetAttackable(true);
     }
 
     public void KillUnit()
