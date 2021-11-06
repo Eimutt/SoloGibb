@@ -20,7 +20,6 @@ public class DamageNumber : MonoBehaviour
     void Update()
     {
         transform.localPosition = transform.localPosition + new Vector3(0, speed * Time.deltaTime, 0);
-        print(transform.localPosition);
         if(transform.localPosition.y > limit)
         {
             Destroy(gameObject);

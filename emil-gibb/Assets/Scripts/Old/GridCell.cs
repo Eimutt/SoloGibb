@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridCell : MonoBehaviour
+public class GridCell
 {
     public enum State { Empty, Friendly, Enemy}
     private State state;
@@ -15,7 +15,7 @@ public class GridCell : MonoBehaviour
     private int distance;
     private Vector3Int attackableFrom;
     enum Terrain { Grass, Wall}
-    Terrain cellT;
+    Terrain cellT = Terrain.Grass;
     // Start is called before the first frame update
     void Start()
     {

@@ -102,6 +102,7 @@ MonoBehaviour:
   dmg: 4
   movement: 3
   range: 1
+  mSpeed: 2
 --- !u!114 &-8436168251973981991
 MonoBehaviour:
   m_ObjectHideFlags: 0

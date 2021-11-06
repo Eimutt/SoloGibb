@@ -13,6 +13,10 @@ public class Unit : MonoBehaviour
     public int movement;
     private int CurrentHp;
     public int range;
+    public int speed;
+    public string name;
+
+    public Sprite closeup;
 
     private Vector3Int cellPos;
 
@@ -27,7 +31,7 @@ public class Unit : MonoBehaviour
     private bool ActionLeft = true;
     private SpriteRenderer spriteRenderer;
     private Vector4 startcolor;
-    private float mSpeed;
+    public float mSpeed = 1.0f;
     private bool attacking;
     private float importance_value = 10;
     private DamageNumberHandler damageNumberHandler;
@@ -79,7 +83,7 @@ public class Unit : MonoBehaviour
 
     public void StartMoving(Stack<Vector3> Mstack, Vector3 start, float speed)
     {
-        mSpeed = speed;
+        //mSpeed = speed;
         stack = Mstack;
         moving = true;
         target = Mstack.Pop();
@@ -125,9 +129,9 @@ public class Unit : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public bool Attack(Unit target, bool offensive)
+    public virtual bool Attack(Unit target, bool offensive)
     {
-        print(this.name + " attacks " + target.name + " for " + this.dmg);
+        //print(this.name + " attacks " + target.name + " for " + this.dmg);
         if (offensive)
         {
             ActionLeft = false;
@@ -177,5 +181,21 @@ public class Unit : MonoBehaviour
     public int GetRange()
     {
         return range;
+    }
+
+    public int GetCurrentSpeed()
+    {
+        return speed;
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+
+
+    public string GetHealthString()
+    {
+        return CurrentHp.ToString();
     }
 }
