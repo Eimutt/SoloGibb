@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.New;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,21 +41,20 @@ public class CreateEncounter : MonoBehaviour
     {
         var gH = Instantiate(gameHandler);
         gH.name = "GameHandler";
-        gH.GetComponent<PlayGrid>().size = new Vector2Int(Random.Range(8, 10), Random.Range(6, 8));
-        GameObject.Find("EndTurn").GetComponent<Button>().onClick.AddListener(() => GameObject.Find("GameHandler").GetComponent<CombatHandler>().EndTurn());
+        gH.GetComponent<PlayGrid>().size = new Vector2Int(8, 8); //add randomness
     }
 
     void ActivateGameHandler()
     {
         GameObject.Find("GameHandler").GetComponent<PlayGrid>().enabled = true;
-        GameObject.Find("GameHandler").GetComponent<CombatHandler>().enabled = true;
+        GameObject.Find("GameHandler").GetComponent<CombatHandlerNew>().enabled = true;
 
     }
 
     void CreateEnemies()
     {
         int nEnemies = Random.Range(2, 5);
-        CombatHandler combatHandler = GameObject.Find("GameHandler").GetComponent<CombatHandler>();
+        CombatHandlerNew combatHandler = GameObject.Find("GameHandler").GetComponent<CombatHandlerNew>();
         for (int i = 0; i < nEnemies; i++)
         {
             int ranEn = Random.Range(0, enemies.Length);
@@ -62,7 +62,7 @@ public class CreateEncounter : MonoBehaviour
             unit.transform.parent = GameObject.Find("Enemies").transform;
             Unit unitScript = unit.GetComponent<Unit>();
             unitScript.startPos = new Vector2Int(Random.Range(5, 7), Random.Range(1, 5));
-            combatHandler.EnemyUnits.Add(unitScript);
+            combatHandler.Units.Add(unitScript);
             unitScript.enabled = true;
         }
     }
@@ -71,7 +71,7 @@ public class CreateEncounter : MonoBehaviour
     void CreateFriendlies()
     {
         int nFriend = 2;
-        CombatHandler combatHandler = GameObject.Find("GameHandler").GetComponent<CombatHandler>();
+        CombatHandlerNew combatHandler = GameObject.Find("GameHandler").GetComponent<CombatHandlerNew>();
         for (int i = 0; i < nFriend; i++)
         {
             int ranEn = Random.Range(0, friendlies.Length);
@@ -79,7 +79,7 @@ public class CreateEncounter : MonoBehaviour
             unit.transform.parent = GameObject.Find("Friendlies").transform;
             Unit unitScript = unit.GetComponent<Unit>();
             unitScript.startPos = new Vector2Int(Random.Range(0, 3), Random.Range(1, 5));
-            combatHandler.FriendlyUnits.Add(unitScript);
+            combatHandler.Units.Add(unitScript);
             unitScript.enabled = true;
         }
     }

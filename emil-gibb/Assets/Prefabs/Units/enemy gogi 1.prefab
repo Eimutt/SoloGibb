@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 786642206235462141}
   - component: {fileID: 786642206235462143}
-  - component: {fileID: 786642206235462140}
   - component: {fileID: -5002854133342892339}
+  - component: {fileID: 1062893672149611800}
   m_Layer: 0
   m_Name: enemy gogi 1
   m_TagString: Untagged
@@ -84,25 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &786642206235462140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 786642206235462138}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9d9594fe9967024687202ba5bd660d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPos: {x: 6, y: 0}
-  enemy: 1
-  MaxHp: 5
-  dmg: 1
-  movement: 3
-  range: 1
-  mSpeed: 2
 --- !u!114 &-5002854133342892339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +98,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultText: {fileID: 5513618440837762473, guid: 4bd16513587e09b468f383db2d3660f5,
     type: 3}
+--- !u!114 &1062893672149611800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786642206235462138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1219b8d3f2c735a4594a731c787cdaa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPos: {x: 0, y: 0}
+  enemy: 1
+  MaxHp: 5
+  dmg: 1
+  movement: 3
+  range: 1
+  speed: 2
+  name: Gogi Warrior
+  closeup: {fileID: 21300000, guid: 284609b86cfba1044a74577e08555cdc, type: 3}
+  mSpeed: 2
 --- !u!1001 &7646374150989123703
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -45,7 +45,7 @@ public class CombatHandler : MonoBehaviour
                     Vector3Int clickPos = playGrid.getCell();
                     GridCell.State state = playGrid.getCellState(clickPos);
                     clickPos.z = 0;
-                    if(state == GridCell.State.Enemy)
+                    if (state == GridCell.State.Enemy)
                     {
                         for (int i = EnemyUnits.Count - 1; i >= 0; i--)
                         {
@@ -55,7 +55,8 @@ public class CombatHandler : MonoBehaviour
                                 Attack(selected, target);
                             }
                         }
-                    } else if (state == GridCell.State.Friendly)
+                    }
+                    else if (state == GridCell.State.Friendly)
                     {
                         foreach (Unit unit in FriendlyUnits)
                         {
@@ -64,13 +65,15 @@ public class CombatHandler : MonoBehaviour
                                 SelectUnit(unit);
                             }
                         }
-                    } else if (state == GridCell.State.Empty)
+                    }
+                    else if (state == GridCell.State.Empty)
                     {
                         if (playGrid.GetReachable(clickPos) && selected.HasMoveLeft())
                         {
                             Move(selected.GetCellPos(), clickPos, selected);
                             GetAttackable(selected);
-                        } else
+                        }
+                        else
                         {
                             selected = null;
                         }
@@ -118,13 +121,14 @@ public class CombatHandler : MonoBehaviour
                     {
                         Attack(enemy, bestTarget);
                         break;
-                    } else
+                    }
+                    else
                     //Find the best square to move to
                     {
-                        Vector3Int bestMove = playGrid.GetBestInfluenceMove(EnemyUnits, FriendlyUnits);
-                        Move(enemy.GetCellPos(), bestMove, enemy);
-                        enemy.DoAction();
-                        break;
+                        //Vector3Int bestMove = playGrid.GetBestInfluenceMove(EnemyUnits, FriendlyUnits);
+                        //Move(enemy.GetCellPos(), bestMove, enemy);
+                        //enemy.DoAction();
+                        //break;
                     }
                 }
                 if (!enemyLeft)
@@ -174,7 +178,7 @@ public class CombatHandler : MonoBehaviour
         if (playerTurn)
         {
             selected = null;
-            foreach(Unit unit in EnemyUnits)
+            foreach (Unit unit in EnemyUnits)
             {
                 unit.NewTurn();
             }
@@ -183,7 +187,7 @@ public class CombatHandler : MonoBehaviour
         else
         {
             playerTurn = true;
-            foreach(Unit unit in FriendlyUnits)
+            foreach (Unit unit in FriendlyUnits)
             {
 
                 unit.calculateImportance();
@@ -213,7 +217,7 @@ public class CombatHandler : MonoBehaviour
         Stack<Vector3> path = playGrid.GetPath(start, end);
         if (path.Count != 0)
         {
-            unit.StartMoving(path, playGrid.GetWorldPos(start), 3f);
+            unit.StartMoving(path, playGrid.GetWorldPos(start), 3f, false);
             playGrid.MoveUnit(start, end, unit.isEnemy());
             unit.SetCellPos(end);
             moving = true;
@@ -234,7 +238,7 @@ public class CombatHandler : MonoBehaviour
             Stack<Vector3> path = playGrid.GetPath(attacker.GetCellPos(), nextPos);
             if (path.Count != 0)
             {
-                attacker.StartMoving(path, playGrid.GetWorldPos(attacker.GetCellPos()), 3f);
+                attacker.StartMoving(path, playGrid.GetWorldPos(attacker.GetCellPos()), 3f, true);
                 playGrid.MoveUnit(attacker.GetCellPos(), nextPos, attacker.isEnemy());
                 attacker.SetCellPos(nextPos);
                 moving = true;
@@ -248,7 +252,8 @@ public class CombatHandler : MonoBehaviour
             if (attacker.isEnemy())
             {
                 FriendlyUnits.Remove(target);
-            } else
+            }
+            else
             {
                 EnemyUnits.Remove(target);
             }

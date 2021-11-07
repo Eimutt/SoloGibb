@@ -93,6 +93,10 @@ public class PlayGrid : MonoBehaviour
 
     public GridCell.State getCellState(Vector3Int cell)
     {
+        if(cell.x < 0 || cell.x >= size.x || cell.y < 0 || cell.y >= size.y)
+        {
+            return GridCell.State.OutOfBounds;
+        }
         return gridCells[cell.x, cell.y].GetState();
     }
     
@@ -190,11 +194,14 @@ public class PlayGrid : MonoBehaviour
             Q.Remove(minV);
             foreach (Unit target in targets)
             {
-                Vector3Int cellpos = target.GetCellPos();
-                if (new Vector2Int(cellpos.x, cellpos.y) == minV)
+                if(target.enemy != unit.enemy)
                 {
-                    //print(target.GetCellPos() + "removed");
-                    goto END;
+                    Vector3Int cellpos = target.GetCellPos();
+                    if (new Vector2Int(cellpos.x, cellpos.y) == minV)
+                    {
+                        //print(target.GetCellPos() + "removed");
+                        goto END;
+                    }
                 }
             }
             
@@ -254,7 +261,8 @@ public class PlayGrid : MonoBehaviour
         
         foreach(Unit target in targets)
         {
-            isAttackableWithMove(target.GetCellPos(), range);
+            if (target.enemy != unit.enemy)
+                isAttackableWithMove(target.GetCellPos(), range);
         }
     }
 
@@ -329,16 +337,11 @@ public class PlayGrid : MonoBehaviour
     }
 
     //Used to create influence map
-    public float DjikstraInfluence(Vector2Int cell, List<Unit> EnemyUnits, List<Unit> FriendlyUnits)
+    public float DjikstraInfluence(Vector2Int cell, List<Unit> Units)
     {
         
         int sum = 0;
-        foreach(Unit unit in EnemyUnits)
-        {
-            Vector3Int enemyPos = unit.GetCellPos();
-            sum += gridDistance(cell.x, cell.y, enemyPos.x, enemyPos.y);
-        }
-        foreach (Unit unit in FriendlyUnits)
+        foreach(Unit unit in Units)
         {
             Vector3Int enemyPos = unit.GetCellPos();
             sum += gridDistance(cell.x, cell.y, enemyPos.x, enemyPos.y);
@@ -362,9 +365,9 @@ public class PlayGrid : MonoBehaviour
         return Mathf.Abs(x1 - x2) + Mathf.Abs(y1 - y2);
     }
     
-    public Vector3Int GetBestInfluenceMove(List<Unit> EnemyUnits, List<Unit> FriendlyUnits)
+    public Vector3Int GetBestInfluenceMove(List<Unit> Units)
     {
-        Vector3Int bestMove = new Vector3Int(0,0,0);
+        Vector3Int bestMove = new Vector3Int(0, 0, 0);
         float bestScore = 1000;
         for (int i = 0; i < size.x; i++)
         {
@@ -372,7 +375,7 @@ public class PlayGrid : MonoBehaviour
             {
                 if (gridCells[i, j].GetReachable())
                 {
-                    float score = DjikstraInfluence(new Vector2Int(i, j), EnemyUnits, FriendlyUnits);
+                    float score = DjikstraInfluence(new Vector2Int(i, j), Units);
                     //print("score of " + i + ", " + j + " : " + score);
                     if (score < bestScore)
                     {

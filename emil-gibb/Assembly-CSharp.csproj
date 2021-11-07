@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Enums\UnitStateEnum.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
     <Compile Include="Assets\Scripts\New\CombatHandlerNew.cs" />
     <Compile Include="Assets\Scripts\New\TileManager.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Assets\Scripts\Old\CreateEncounter.cs" />
     <Compile Include="Assets\Scripts\Old\DamageNumber.cs" />
     <Compile Include="Assets\Scripts\Old\DamageNumberHandler.cs" />
+    <Compile Include="Assets\Scripts\Old\Enemy.cs" />
     <Compile Include="Assets\Scripts\Old\GridCell.cs" />
     <Compile Include="Assets\Scripts\Old\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Old\Hero.cs" />

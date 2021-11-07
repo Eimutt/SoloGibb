@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    CombatHandler combatHandler;
+    //CombatHandler combatHandler;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,22 +13,22 @@ public class InputHandler : MonoBehaviour
 
     void Awake()
     {
-        combatHandler = GetComponent<CombatHandler>();
+        //combatHandler = GetComponent<CombatHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (combatHandler.ReadyForInput())
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                combatHandler.SelectNextUnit();
-            }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                combatHandler.EndTurn();
-            }
-        }
+        //if (combatHandler.ReadyForInput())
+        //{
+        //    if (Input.GetKeyDown(KeyCode.Tab))
+        //    {
+        //        combatHandler.SelectNextUnit();
+        //    }
+        //    else if (Input.GetKeyDown(KeyCode.E))
+        //    {
+        //        combatHandler.EndTurn();
+        //    }
+        //}
     }
 }

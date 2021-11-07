@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridCell
 {
-    public enum State { Empty, Friendly, Enemy}
+    public enum State { Empty, Friendly, Enemy, OutOfBounds}
     private State state;
     public bool occupied;
     public Unit unit;

@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.New;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.Enums;
 
 public class Unit : MonoBehaviour
 {
+    private UnitStateEnum unitState;
     private PlayGrid playgrid;
     public Vector2Int startPos;
     public bool enemy;
@@ -20,8 +22,6 @@ public class Unit : MonoBehaviour
 
     private Vector3Int cellPos;
 
-
-    private bool moving;
     private Stack<Vector3> stack;
     private Vector3 target;
     private Vector3 origin;
@@ -32,7 +32,7 @@ public class Unit : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Vector4 startcolor;
     public float mSpeed = 1.0f;
-    private bool attacking;
+    protected bool attacking;
     private float importance_value = 10;
     private DamageNumberHandler damageNumberHandler;
     // Start is called before the first frame update
@@ -55,7 +55,7 @@ public class Unit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moving)
+        if (unitState == UnitStateEnum.Moving)
         {
             MoveAlongPath();
         }
@@ -81,14 +81,14 @@ public class Unit : MonoBehaviour
         transform.position = pos + new Vector3(0, 0.5f, 0);
     }
 
-    public void StartMoving(Stack<Vector3> Mstack, Vector3 start, float speed)
+    public void StartMoving(Stack<Vector3> Mstack, Vector3 start, float speed, bool canAttack)
     {
         //mSpeed = speed;
         stack = Mstack;
-        moving = true;
         target = Mstack.Pop();
         origin = start;
-        MoveLeft = false;
+        unitState = UnitStateEnum.Moving;
+        attacking = canAttack;
     }
 
     private void MoveAlongPath()
@@ -100,8 +100,7 @@ public class Unit : MonoBehaviour
             t = 0;
             if( stack.Count == 0)
             {
-                moving = false;
-                GameObject.Find("GameHandler").GetComponent<CombatHandler>().Resume();
+                FinishMoving();
             } else
             {
                 origin = target;
@@ -110,8 +109,15 @@ public class Unit : MonoBehaviour
         }
     }
 
+    public virtual void FinishMoving()
+    {
+        MoveLeft = false;
+        unitState = UnitStateEnum.Idle;
+    }
+
     public bool TakeDamage(int dmg)
     {
+        print("damage taken");
         CurrentHp -= dmg;
         if(CurrentHp <= 0)
         {
@@ -125,7 +131,7 @@ public class Unit : MonoBehaviour
 
     public void Die()
     {
-        GameObject.Find("GameHandler").GetComponent<CombatHandler>().Resume();
+        GameObject.Find("GameHandler").GetComponent<CombatHandlerNew>().Resume();
         Destroy(gameObject);
     }
 
@@ -137,6 +143,7 @@ public class Unit : MonoBehaviour
             ActionLeft = false;
             spriteRenderer.color = Color.gray;
         }
+        unitState = UnitStateEnum.Idle;
         return target.TakeDamage(dmg);
     }
 
@@ -155,6 +162,7 @@ public class Unit : MonoBehaviour
 
     public void DoAction()
     {
+        MoveLeft = false;
         ActionLeft = false;
     }
 
@@ -197,5 +205,10 @@ public class Unit : MonoBehaviour
     public string GetHealthString()
     {
         return CurrentHp.ToString();
+    }
+
+    public UnitStateEnum GetUnitState()
+    {
+        return unitState;
     }
 }
