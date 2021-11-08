@@ -44,6 +44,7 @@ namespace Assets.Scripts.New
                         Unit target = Units[i];
                         if (target.GetCellPos() == clickPos && playGrid.GetAttackable(clickPos))
                         {
+                            //if(Enemy in range)
                             Attack(selectedUnit, target);
                         }
                     }
@@ -53,7 +54,6 @@ namespace Assets.Scripts.New
                     if (playGrid.GetReachable(clickPos) && selectedUnit.HasMoveLeft())
                     {
                         Move(selectedUnit, clickPos);
-                        GetAttackable();
                     }
                 }
             }
@@ -151,10 +151,10 @@ namespace Assets.Scripts.New
                 unit.Move(playGrid.GetWorldPos(unit.GetCellPos()));
                 if (unit.enemy)
                 {
-                    playGrid.setState(unit.GetCellPos(), GridCell.State.Friendly);
+                    playGrid.setState(unit.GetCellPos(), GridCell.State.Enemy);
                 } else
                 {
-                    playGrid.setState(unit.GetCellPos(), GridCell.State.Enemy);
+                    playGrid.setState(unit.GetCellPos(), GridCell.State.Friendly);
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace Assets.Scripts.New
         public void Move(Unit unit, Vector3Int end)
         {
             Vector3Int start = selectedUnit.GetCellPos();
-            playGrid.SelectTile(end);
+
             playGrid.SetReachable(start, true);
             Stack<Vector3> path = playGrid.GetPath(start, end);
             if (path.Count != 0)
@@ -171,24 +171,13 @@ namespace Assets.Scripts.New
                 playGrid.MoveUnit(start, end, unit.isEnemy());
                 unit.SetCellPos(end);
             }
+
+            playGrid.GrayOutBoard(end);
+            GetAttackable();
         }
 
         public void Attack(Unit attacker, Unit target)
         {
-            if (attacker.HasMoveLeft())
-            {
-                playGrid.SetReachable(attacker.GetCellPos(), true);
-                Vector3Int nextPos = playGrid.GetAttackCell(target.GetCellPos());
-                Stack<Vector3> path = playGrid.GetPath(attacker.GetCellPos(), nextPos);
-                if (path.Count != 0)
-                {
-                    attacker.StartMoving(path, playGrid.GetWorldPos(attacker.GetCellPos()), 3f, true);
-                    playGrid.MoveUnit(attacker.GetCellPos(), nextPos, attacker.isEnemy());
-                    attacker.SetCellPos(nextPos);
-                    //enemyActive = true;
-                }
-            }
-
             //Target Dies
             if (attacker.Attack(target, true))
             {
@@ -206,6 +195,23 @@ namespace Assets.Scripts.New
                 }
             }
             active = false;
+        }
+
+        public void MoveForAttack(Unit attacker, Unit target)
+        {
+            if (attacker.HasMoveLeft())
+            {
+                playGrid.SetReachable(attacker.GetCellPos(), true);
+                Vector3Int nextPos = playGrid.GetAttackCell(target.GetCellPos());
+                Stack<Vector3> path = playGrid.GetPath(attacker.GetCellPos(), nextPos);
+                if (path.Count != 0)
+                {
+                    attacker.StartMoving(path, playGrid.GetWorldPos(attacker.GetCellPos()), 3f, true);
+                    playGrid.MoveUnit(attacker.GetCellPos(), nextPos, attacker.isEnemy());
+                    attacker.SetCellPos(nextPos);
+                    //enemyActive = true;
+                }
+            }
         }
 
         public void EndMovement()

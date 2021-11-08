@@ -45,7 +45,10 @@ public class PlayGrid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
+            debugState();
+        }
     }
 
     void InitGround()
@@ -336,6 +339,18 @@ public class PlayGrid : MonoBehaviour
         tileMap.SetColor(pos, Color.white);
     }
 
+    public void GrayOutBoard(Vector3Int pos)
+    {
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                tileMap.SetColor(new Vector3Int(x, y, 0), Color.grey);
+            }
+        }
+        tileMap.SetColor(pos, Color.green);
+    }
+
     //Used to create influence map
     public float DjikstraInfluence(Vector2Int cell, List<Unit> Units)
     {
@@ -386,5 +401,28 @@ public class PlayGrid : MonoBehaviour
             }
         }
         return bestMove;
+    }
+
+    public void debugState()
+    {
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                print(x + " , " + y + " " + gridCells[x, y].GetState());
+                if(gridCells[x,y].GetState() == GridCell.State.Friendly)
+                {
+                    tileMap.SetColor(new Vector3Int(x, y, 0), Color.green);
+
+                } else if (gridCells[x, y].GetState() == GridCell.State.Enemy)
+                {
+                    tileMap.SetColor(new Vector3Int(x, y, 0), Color.red);
+
+                } else
+                {
+                    tileMap.SetColor(new Vector3Int(x, y, 0), Color.yellow);
+                }
+            }
+        }
     }
 }
