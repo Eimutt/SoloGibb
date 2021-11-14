@@ -61,7 +61,7 @@ public class CreateEncounter : MonoBehaviour
             GameObject unit = Instantiate(enemies[ranEn]);
             unit.transform.parent = GameObject.Find("Enemies").transform;
             Unit unitScript = unit.GetComponent<Unit>();
-            unitScript.startPos = new Vector2Int(Random.Range(5, 7), Random.Range(1, 5));
+            unitScript.startPos = new Vector2Int(Random.Range(5, 7), 1 + i);
             combatHandler.Units.Add(unitScript);
             unitScript.enabled = true;
         }

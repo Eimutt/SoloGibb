@@ -16,6 +16,7 @@ namespace Assets.Scripts.New
         private bool playerTurn;
         private bool active;
         private bool readyForInput;
+        private Unit selectedTarget;
         void Start()
         {
             turn = 1;
@@ -28,11 +29,17 @@ namespace Assets.Scripts.New
 
         private void Update()
         {
-            if(!active)
+            if(selectedTarget != null && selectedUnit.GetUnitState() == UnitStateEnum.Idle)
+            {
+                Attack(selectedUnit, selectedTarget, false);
+                selectedTarget = null;
+            }
+
+            else if(!active)
             {
                 NextUnit();
             }
-            if (!selectedUnit.enemy && selectedUnit.GetUnitState() == UnitStateEnum.Idle && Input.GetMouseButtonDown(0))
+            if (!selectedUnit.enemy && selectedUnit.GetUnitState() == UnitStateEnum.Idle && Input.GetMouseButtonDown(0) && selectedUnit.HasActionLeft())
             {
                 Vector3Int clickPos = playGrid.getCell();
                 GridCell.State state = playGrid.getCellState(clickPos);
@@ -44,8 +51,13 @@ namespace Assets.Scripts.New
                         Unit target = Units[i];
                         if (target.GetCellPos() == clickPos && playGrid.GetAttackable(clickPos))
                         {
-                            //if(Enemy in range)
-                            Attack(selectedUnit, target);
+                            if(playGrid.InAttackRange(selectedUnit, target)) //Attack without moving if possible
+                                Attack(selectedUnit, target, false);
+                            else
+                            {
+                                MoveForAttack(selectedUnit, target); //Move within range before attacking
+                            }
+
                         }
                     }
                 }
@@ -71,6 +83,7 @@ namespace Assets.Scripts.New
                     Unit target = FriendlyUnits[i];
                     if (playGrid.GetAttackable(target.GetCellPos()))
                     {
+                            print(target.name + " is attackable");
                         canAttack = true;
                         if (target.getImportance() > bestValue)
                         {
@@ -85,13 +98,19 @@ namespace Assets.Scripts.New
                 //IF target found attack
                 if (canAttack)
                 {
-                    Attack(selectedUnit, bestTarget);
+                    if (playGrid.InAttackRange(selectedUnit, bestTarget)) //Attack without moving if possible
+                        Attack(selectedUnit, bestTarget, false);
+                    else
+                    {
+                        MoveForAttack(selectedUnit, bestTarget); //Move within range before attacking
+                    }
                 }
                 else
                 //Find the best square to move to
                 {
                     Vector3Int bestMove = playGrid.GetBestInfluenceMove(Units);
                     Move(selectedUnit, bestMove);
+                    active = false;
                     selectedUnit.DoAction();
                 }
             }
@@ -161,8 +180,13 @@ namespace Assets.Scripts.New
 
         public void Move(Unit unit, Vector3Int end)
         {
-            Vector3Int start = selectedUnit.GetCellPos();
+            if(unit.GetCellPos() == end && unit.enemy)
+            {
+                EndMovement();
+            }
 
+
+            Vector3Int start = selectedUnit.GetCellPos();
             playGrid.SetReachable(start, true);
             Stack<Vector3> path = playGrid.GetPath(start, end);
             if (path.Count != 0)
@@ -176,8 +200,9 @@ namespace Assets.Scripts.New
             GetAttackable();
         }
 
-        public void Attack(Unit attacker, Unit target)
+        public void Attack(Unit attacker, Unit target, bool counterAttack)
         {
+            selectedTarget = null;
             //Target Dies
             if (attacker.Attack(target, true))
             {
@@ -194,28 +219,29 @@ namespace Assets.Scripts.New
                     Units.Remove(attacker);
                 }
             }
-            active = false;
+            attacker.DoAction();
+            if(attacker.isEnemy())
+                active = false;
         }
 
         public void MoveForAttack(Unit attacker, Unit target)
         {
-            if (attacker.HasMoveLeft())
+            playGrid.SetReachable(attacker.GetCellPos(), true);
+            Vector3Int nextPos = playGrid.GetAttackCell(target.GetCellPos());
+            Stack<Vector3> path = playGrid.GetPath(attacker.GetCellPos(), nextPos);
+            if (path.Count != 0)
             {
-                playGrid.SetReachable(attacker.GetCellPos(), true);
-                Vector3Int nextPos = playGrid.GetAttackCell(target.GetCellPos());
-                Stack<Vector3> path = playGrid.GetPath(attacker.GetCellPos(), nextPos);
-                if (path.Count != 0)
-                {
-                    attacker.StartMoving(path, playGrid.GetWorldPos(attacker.GetCellPos()), 3f, true);
-                    playGrid.MoveUnit(attacker.GetCellPos(), nextPos, attacker.isEnemy());
-                    attacker.SetCellPos(nextPos);
-                    //enemyActive = true;
-                }
+                attacker.StartMoving(path, playGrid.GetWorldPos(attacker.GetCellPos()), 3f, true);
+                playGrid.MoveUnit(attacker.GetCellPos(), nextPos, attacker.isEnemy());
+                attacker.SetCellPos(nextPos);
             }
+            selectedTarget = target;
+            playGrid.GrayOutBoard(nextPos);
         }
 
         public void EndMovement()
         {
+            selectedUnit.DoAction();
             NextUnit();
         }
 

@@ -323,6 +323,19 @@ public class PlayGrid : MonoBehaviour
         return false;
     }
 
+    public bool InAttackRange(Unit attacker, Unit target)
+    {
+        var targetPos = target.GetCellPos();
+        var attackerPos = attacker.GetCellPos();
+        if (gridDistance(targetPos.x, targetPos.y, attackerPos.x, attackerPos.y) <= attacker.GetRange())
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
     public Vector3Int GetAttackCell(Vector3Int cell)
     {
         return gridCells[cell.x, cell.y].GetAttackableFrom();
@@ -409,7 +422,7 @@ public class PlayGrid : MonoBehaviour
         {
             for (int y = 0; y < size.y; y++)
             {
-                print(x + " , " + y + " " + gridCells[x, y].GetState());
+                //print(x + " , " + y + " " + gridCells[x, y].GetState());
                 if(gridCells[x,y].GetState() == GridCell.State.Friendly)
                 {
                     tileMap.SetColor(new Vector3Int(x, y, 0), Color.green);
