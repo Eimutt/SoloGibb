@@ -156,6 +156,9 @@ public class PlayGrid : MonoBehaviour
         {
             currGCell = new Vector3Int(prev[currGCell.x, currGCell.y].x, prev[currGCell.x, currGCell.y].y, 1);
             stack.Push(tileMap.CellToWorld(currGCell));
+            if (stack.Count >= 5)
+                Console.WriteLine("Pathfinding stack overflow");
+                return new Stack<Vector3>();
         }
 
         return stack;
