@@ -83,6 +83,7 @@
     <Compile Include="Assets\Scripts\Old\Ranged.cs" />
     <Compile Include="Assets\Scripts\Old\Unit.cs" />
     <Compile Include="Assets\Scripts\SelectedUnitUiHandler.cs" />
+    <Compile Include="Assets\Scripts\UnitHandler.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.2f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

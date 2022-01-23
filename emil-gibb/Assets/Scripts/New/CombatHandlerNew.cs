@@ -17,28 +17,38 @@ namespace Assets.Scripts.New
         private bool active;
         private bool readyForInput;
         private Unit selectedTarget;
+
         void Start()
         {
             turn = 1;
             playGrid = GetComponent<PlayGrid>();
             eventManager = GameObject.Find("EventManager").GetComponent<EventManager>();
             GameObject.Find("Finish").GetComponent<Button>().onClick.AddListener(() => EndMovement());
+            GameObject.Find("Wait").GetComponent<Button>().onClick.AddListener(() => Wait());
             InitUnits();
 
         }
 
         private void Update()
         {
-            if(selectedTarget != null && selectedUnit.GetUnitState() == UnitStateEnum.Idle)
+            //If target is reached attack
+            //
+            if (selectedTarget != null && selectedUnit.GetUnitState() == UnitStateEnum.Idle)
             {
                 Attack(selectedUnit, selectedTarget, false);
                 selectedTarget = null;
+                if (selectedUnit.enemy)
+                {
+                    return;
+                }
             }
-
-            else if(!active)
+            else if (!active)
             {
                 NextUnit();
             }
+
+
+
             if (!selectedUnit.enemy && selectedUnit.GetUnitState() == UnitStateEnum.Idle && Input.GetMouseButtonDown(0) && selectedUnit.HasActionLeft())
             {
                 Vector3Int clickPos = playGrid.getCell();
@@ -51,7 +61,7 @@ namespace Assets.Scripts.New
                         Unit target = Units[i];
                         if (target.GetCellPos() == clickPos && playGrid.GetAttackable(clickPos))
                         {
-                            if(playGrid.InAttackRange(selectedUnit, target)) //Attack without moving if possible
+                            if (playGrid.InAttackRange(selectedUnit, target)) //Attack without moving if possible
                                 Attack(selectedUnit, target, false);
                             else
                             {
@@ -69,7 +79,7 @@ namespace Assets.Scripts.New
                     }
                 }
             }
-            else if(selectedUnit.enemy && selectedUnit.GetUnitState() == UnitStateEnum.Idle) //Enemy should move
+            else if (selectedUnit.enemy && selectedUnit.GetUnitState() == UnitStateEnum.Idle) //Enemy should move
             {
                 var FriendlyUnits = Units.Where(x => !x.enemy).ToList();
                 playGrid.Djikstra(selectedUnit, Units); //See where on grid selected unit can walk
@@ -83,7 +93,7 @@ namespace Assets.Scripts.New
                     Unit target = FriendlyUnits[i];
                     if (playGrid.GetAttackable(target.GetCellPos()))
                     {
-                            print(target.name + " is attackable");
+                        print(target.name + " is attackable");
                         canAttack = true;
                         if (target.getImportance() > bestValue)
                         {
@@ -118,21 +128,26 @@ namespace Assets.Scripts.New
 
         public void NextUnit()
         {
-            int maxSpeed = 0;
-            int bestIndex = -1;
-            for(int i = 0; i < Units.Count; i++)
-            {
-                if (Units[i].HasMoveLeft() && Units[i].GetCurrentSpeed() > maxSpeed)
-                {
-                    maxSpeed = Units[i].GetCurrentSpeed();
-                    bestIndex = i;
-                } 
-            }
+            //int maxSpeed = 0;
+            //int bestIndex = -1;
+            //for (int i = 0; i < Units.Count; i++)
+            //{
+            //    if (Units[i].HasMoveLeft() && Units[i].GetCurrentSpeed() > maxSpeed)
+            //    {
+            //        maxSpeed = Units[i].GetCurrentSpeed();
+            //        bestIndex = i;
+            //    }
+            //}
 
-            if (bestIndex != -1)
-                SelectUnit(Units[bestIndex]);
-            else
-                NextTurn();
+            foreach (Unit unit in Units)
+            {
+                if (unit.HasMoveLeft())
+                {
+                    SelectUnit(unit);
+                    return;
+                }
+            }
+            NextTurn();
         }
 
         public void SelectUnit(Unit newUnit)
@@ -156,31 +171,43 @@ namespace Assets.Scripts.New
 
         public void NextTurn()
         {
-            turn++;
             //Update Turn Counter in UI
-            foreach(Unit unit in Units)
+            foreach (Unit unit in Units)
             {
                 unit.NewTurn();
             }
+            active = false;
+
+
+            turn++;
+            CreateTurnOrder();
+            eventManager.NewTurnEvent(turn);
         }
         public void InitUnits()
         {
+            int unitId = 0;
             foreach (Unit unit in Units)
             {
+                unit.SetUnitId(unitId);
                 unit.Move(playGrid.GetWorldPos(unit.GetCellPos()));
                 if (unit.enemy)
                 {
                     playGrid.setState(unit.GetCellPos(), GridCell.State.Enemy);
-                } else
+                }
+                else
                 {
                     playGrid.setState(unit.GetCellPos(), GridCell.State.Friendly);
                 }
+                eventManager.AddUnitEvent(unitId, unit.name, unit.enemy);
+                unitId++;
             }
+            CreateTurnOrder();
         }
 
         public void Move(Unit unit, Vector3Int end)
         {
-            if(unit.GetCellPos() == end && unit.enemy)
+            eventManager.MoveUnitEvent(unit.GetUnitId());
+            if (unit.GetCellPos() == end && unit.enemy)
             {
                 EndMovement();
             }
@@ -202,12 +229,17 @@ namespace Assets.Scripts.New
 
         public void Attack(Unit attacker, Unit target, bool counterAttack)
         {
+
+            eventManager.ActionUnitEvent(attacker.GetUnitId());
+
+
             selectedTarget = null;
             //Target Dies
             if (attacker.Attack(target, true))
             {
                 playGrid.ResetTile(target.GetCellPos());
                 Units.Remove(target);
+                eventManager.RemoveUnitEvent(target.GetUnitId());
             }
             //CounterAttack
             else if (target.GetRange() >= attacker.GetRange())
@@ -217,15 +249,28 @@ namespace Assets.Scripts.New
                 {
                     playGrid.ResetTile(attacker.GetCellPos());
                     Units.Remove(attacker);
+                    eventManager.RemoveUnitEvent(attacker.GetUnitId());
                 }
             }
             attacker.DoAction();
-            if(attacker.isEnemy())
+            if (attacker.isEnemy())
                 active = false;
+        }
+
+        public void Wait()
+        {
+            var unit = selectedUnit;
+            Units.Remove(unit);
+            Units.Add(unit);
+
+            eventManager.UpdateTurnOrderEvent(Units.Select(u => u.GetUnitId()).ToList());
+            NextUnit();
         }
 
         public void MoveForAttack(Unit attacker, Unit target)
         {
+            eventManager.MoveUnitEvent(attacker.GetUnitId());
+
             playGrid.SetReachable(attacker.GetCellPos(), true);
             Vector3Int nextPos = playGrid.GetAttackCell(target.GetCellPos());
             Stack<Vector3> path = playGrid.GetPath(attacker.GetCellPos(), nextPos);
@@ -259,6 +304,17 @@ namespace Assets.Scripts.New
         public void Resume()
         {
             active = false;
+        }
+
+        public void CreateTurnOrder()
+        {
+            Units.Sort((y, u) => u.GetCurrentSpeed().CompareTo(y.GetCurrentSpeed()));
+            eventManager.UpdateTurnOrderEvent(Units.Select(u => u.GetUnitId()).ToList());
+        }
+
+        public void UpdateUiForUnit()
+        {
+
         }
     }
 }

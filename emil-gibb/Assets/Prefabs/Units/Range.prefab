@@ -102,7 +102,7 @@ MonoBehaviour:
   dmg: 2
   movement: 2
   range: 2
-  speed: 3
+  speed: 2
   name: Ranger
   closeup: {fileID: 21300000, guid: 0d17e4c879d154144a466a7b219f15d3, type: 3}
   mSpeed: 2

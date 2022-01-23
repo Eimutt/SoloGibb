@@ -116,7 +116,7 @@ MonoBehaviour:
   dmg: 1
   movement: 3
   range: 1
-  speed: 2
+  speed: 3
   name: Gogi Warrior
   closeup: {fileID: 21300000, guid: 284609b86cfba1044a74577e08555cdc, type: 3}
   mSpeed: 2

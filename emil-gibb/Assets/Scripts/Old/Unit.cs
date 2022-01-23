@@ -35,6 +35,8 @@ public class Unit : MonoBehaviour
     protected bool attacking;
     private float importance_value = 10;
     private DamageNumberHandler damageNumberHandler;
+
+    private int unitId;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,7 +51,7 @@ public class Unit : MonoBehaviour
 
     void Awake()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -94,14 +96,15 @@ public class Unit : MonoBehaviour
     private void MoveAlongPath()
     {
         t += Time.deltaTime * mSpeed;
-        transform.position = (1-t) * origin + t * target + new Vector3(0, 0.5f, 0);
-        if(t > 1)
+        transform.position = (1 - t) * origin + t * target + new Vector3(0, 0.5f, 0);
+        if (t > 1)
         {
             t = 0;
-            if( stack.Count == 0)
+            if (stack.Count == 0)
             {
                 FinishMoving();
-            } else
+            }
+            else
             {
                 origin = target;
                 target = stack.Pop();
@@ -119,7 +122,7 @@ public class Unit : MonoBehaviour
     {
         print("damage taken");
         CurrentHp -= dmg;
-        if(CurrentHp <= 0)
+        if (CurrentHp <= 0)
         {
             Die();
             return true;
@@ -210,5 +213,15 @@ public class Unit : MonoBehaviour
     public UnitStateEnum GetUnitState()
     {
         return unitState;
+    }
+
+    public int GetUnitId()
+    {
+        return unitId;
+    }
+
+    public void SetUnitId(int unitId)
+    {
+        this.unitId = unitId;
     }
 }

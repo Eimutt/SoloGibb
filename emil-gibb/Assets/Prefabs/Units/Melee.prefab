@@ -102,7 +102,7 @@ MonoBehaviour:
   dmg: 4
   movement: 3
   range: 1
-  speed: 3
+  speed: 4
   name: Warrior
   closeup: {fileID: 21300000, guid: 3162c73961e35fa4fa19bd4ed1012d7c, type: 3}
   mSpeed: 2
