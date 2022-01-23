@@ -10,6 +10,7 @@ public class SelectedUnitUiHandler : MonoBehaviour
     private GameObject UnitHealth;
     private GameObject Finish;
     private EventManager eventManager;
+    private GameObject UnitSelect;
     private GameObject Turn;
 
     private GameObject UnitList;
@@ -25,6 +26,7 @@ public class SelectedUnitUiHandler : MonoBehaviour
         Finish = gameObject.transform.Find("Finish").gameObject;
         UnitList = gameObject.transform.Find("UnitList").gameObject;
         Turn = gameObject.transform.Find("Turn").gameObject;
+        UnitSelect = gameObject.transform.Find("UnitSelect").gameObject;
         UnitHealth = gameObject.transform.Find("Stats/Health/Text").gameObject;
         unitsId = new List<int>();
 
@@ -61,6 +63,8 @@ public class SelectedUnitUiHandler : MonoBehaviour
         {
             Finish.SetActive(false);
         }
+
+        SelectUnit(unitinfo.GetUnitId());
     }
 
     void AddUnit(int unitId, string name, bool enemy)
@@ -80,7 +84,7 @@ public class SelectedUnitUiHandler : MonoBehaviour
 
             if (t != null)
             {
-                t.GetComponent<RectTransform>().localPosition = new Vector3(0, y, 0);
+                t.GetComponent<RectTransform>().localPosition = new Vector3(10, y, 0);
                 y -= 30;
             }
         }
@@ -89,17 +93,19 @@ public class SelectedUnitUiHandler : MonoBehaviour
     void NewTurn(int turn)
     {
         Turn.GetComponent<Text>().text = turn.ToString();
-        
 
-        foreach (Transform t in UnitList.transform){
 
+        foreach (Transform t in UnitList.transform)
+        {
+            if (t.gameObject.active == false)
+            {
+                Destroy(t.gameObject);
+                continue;
+            }
             t.Find("Action").GetComponent<Image>().color = Color.white;
             t.Find("Move").GetComponent<Image>().color = Color.white;
 
-            if(t.gameObject.active == false)
-            {
-                Destroy(t.gameObject);
-            }
+            
         }
     }
 
@@ -117,5 +123,16 @@ public class SelectedUnitUiHandler : MonoBehaviour
     {
         transform.Find("UnitList/" + unitId.ToString()).gameObject.active = false;
         //Destroy(transform.Find("UnitList/" + unitId.ToString()));
+    }
+
+    void SelectUnit(int unitId)
+    {
+
+        var t = UnitList.transform.Find(unitId.ToString());
+
+        var pos = t.transform.position;
+
+
+        UnitSelect.GetComponent<RectTransform>().position = new Vector3(pos.x - 90, pos.y, 0);
     }
 }
