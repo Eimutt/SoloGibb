@@ -16,7 +16,7 @@ public class Rotation : MonoBehaviour
     void Start()
     {
         combatToggle = true;
-        direction = 1;
+        direction = -1;
         t = 0;
         CombatCanvas = GameObject.Find("Canvas");
         WorldMap = GameObject.Find("WorldMap");
