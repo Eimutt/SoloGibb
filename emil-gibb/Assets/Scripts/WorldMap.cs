@@ -17,6 +17,8 @@ public class WorldMap : MonoBehaviour
     public GameObject Path;
 
     public Vector2 start;
+    public float randomOffset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +49,11 @@ public class WorldMap : MonoBehaviour
 
                 node.name = i + " " + j;
 
-                node.transform.localPosition = posAlongLine(j * (1f/((float)options + 1)) ,i);
+                float x = Random.Range(-randomOffset, randomOffset);
+                float y = Random.Range(-randomOffset, randomOffset);
+
+
+                node.transform.localPosition = posAlongLine(j * (1f / ((float)options + 1)), i, 1, 2) + new Vector3(x, y, 0);
 
                 //create path objects
             }
@@ -94,12 +100,12 @@ public class WorldMap : MonoBehaviour
     }
 
 
-    Vector3 posAlongLine(float t, float i)
+    Vector3 posAlongLine(float t, float i, float yDif, float xDif)
     {
         Vector3 pos = new Vector3();
 
-        Vector3 lineStart = new Vector3(start.x + (i * 1), start.y + i * 3, 0);
-        Vector3 lineEnd = new Vector3(start.y + i * 1 - (start.x * 0.5f), start.y + (i * 1.5f), 0);
+        Vector3 lineStart = new Vector3(start.x - xDif  + (i * xDif), start.y + yDif + (i * yDif), 0);
+        Vector3 lineEnd = new Vector3(start.x + xDif + (i * xDif), start.y - yDif + (i * yDif), 0);
 
         pos.x = lineStart.x * t + lineEnd.x * (1 - t);
 
