@@ -19,6 +19,7 @@ public class Rotation : MonoBehaviour
         direction = -1;
         t = 0;
         CombatCanvas = GameObject.Find("Canvas");
+        CombatCanvas.active = false;
         WorldMap = GameObject.Find("WorldMap");
     }
 

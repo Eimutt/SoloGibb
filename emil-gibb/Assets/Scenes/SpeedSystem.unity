@@ -164,6 +164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9fc373c0c5893748bbc301ab4fa9b68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level: 0
+  reachableFrom: []
   difficulty: 0
   grid: {fileID: 4382060749931307767, guid: 2301801a9890d6b4a961181159dcd672, type: 3}
   enemies:
@@ -175,6 +177,7 @@ MonoBehaviour:
   gameHandler: {fileID: 2332700399002207644, guid: 099d4ae33476d4646b9183833ad2c1ce,
     type: 3}
   units: {fileID: 6102458223921197774, guid: f4ea4e2dd46760641984ee015245fff7, type: 3}
+  start: 1
 --- !u!1 &169874630
 GameObject:
   m_ObjectHideFlags: 0

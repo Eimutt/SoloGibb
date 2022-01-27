@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class CreateEncounter : MonoBehaviour
+public class CreateEncounter : MapNode
 {
     public int difficulty;
     public GameObject grid;
@@ -14,22 +14,50 @@ public class CreateEncounter : MonoBehaviour
     public GameObject[] friendlies;
     public GameObject gameHandler;
     public GameObject units;
+    public bool start;
+    private bool instantiated;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(units);
-        CreateGrid();
-        CreateGameHandler();
-        CreateEnemies();
-        CreateFriendlies();
-        ActivateGameHandler();
-        CreateUI();
+        if (start)
+        {
+            Instantiate(units);
+            CreateGrid();
+            CreateGameHandler();
+            CreateEnemies();
+            CreateFriendlies();
+            ActivateGameHandler();
+            CreateUI();
+            instantiated = true;
+        }
+
+        base.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public override void OnMouseDown()
+    {
+        base.OnMouseDown();
+
+        if (!instantiated)
+        {
+            Instantiate(units);
+            CreateGrid();
+            CreateGameHandler();
+            CreateEnemies();
+            CreateFriendlies();
+            ActivateGameHandler();
+            CreateUI();
+            instantiated = true;
+        }
     }
 
     void CreateGrid()

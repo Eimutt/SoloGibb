@@ -23,9 +23,9 @@ namespace Assets.Scripts.New
             turn = 1;
             playGrid = GetComponent<PlayGrid>();
             eventManager = GameObject.Find("EventManager").GetComponent<EventManager>();
+            InitUnits();
             GameObject.Find("Finish").GetComponent<Button>().onClick.AddListener(() => EndMovement());
             GameObject.Find("Wait").GetComponent<Button>().onClick.AddListener(() => Wait());
-            InitUnits();
 
         }
 
@@ -152,7 +152,6 @@ namespace Assets.Scripts.New
 
         public void SelectUnit(Unit newUnit)
         {
-            print("selecting new unit " + newUnit.GetName());
             //UI
             eventManager.SelectUnitEvent(newUnit);
 
