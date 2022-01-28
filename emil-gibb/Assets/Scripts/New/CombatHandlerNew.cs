@@ -254,6 +254,11 @@ namespace Assets.Scripts.New
             attacker.DoAction();
             if (attacker.isEnemy())
                 active = false;
+
+            if (IsCombatDone())
+            {
+                GameObject.Find("WorldMap").GetComponent<WorldMap>().ActivateMovement();
+            }
         }
 
         public void Wait()
@@ -314,6 +319,19 @@ namespace Assets.Scripts.New
         public void UpdateUiForUnit()
         {
 
+        }
+
+        public bool IsCombatDone()
+        {
+            if (!Units.Any(a => a.isEnemy() == true))
+            {
+                return true;
+            }
+            else if (!Units.Any(a => a.isEnemy() == true))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

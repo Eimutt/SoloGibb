@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotation : MonoBehaviour
+public class SceneHandler : MonoBehaviour
 {
     private bool combatToggle;
     public float rotationSpeed;
@@ -10,16 +10,21 @@ public class Rotation : MonoBehaviour
     private float t;
     private float direction;
 
-    public GameObject CombatCanvas;
+    public Canvas CombatCanvas;
     public GameObject WorldMap;
+
+    public MapNode mapNode;
+
+    public bool inEncounter;
+    public bool init;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        combatToggle = true;
         direction = -1;
         t = 0;
-        CombatCanvas = GameObject.Find("Canvas");
-        CombatCanvas.active = false;
+        CombatCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         WorldMap = GameObject.Find("WorldMap");
     }
 
@@ -36,11 +41,15 @@ public class Rotation : MonoBehaviour
 
 
 
-            if(Mathf.Abs(t) > 90)
+            if (Mathf.Abs(t) > 90)
             {
                 rotating = false;
                 t = 0;
                 direction *= -1;
+                if(init == false)
+                {
+                    ActivateNode();
+                }
             }
         }
 
@@ -48,7 +57,31 @@ public class Rotation : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             rotating = true;
-            CombatCanvas.active = direction == 1 ? false : true;
+            CombatCanvas.enabled = direction == 1 ? false : true;
         }
+    }
+
+    public void MoveToInteractiveScene(MapNode newMapNode)
+    {
+        inEncounter = true;
+        mapNode = newMapNode;
+        rotating = true;
+        combatToggle = true;
+    }
+
+    public void ActivateNode()
+    {
+        init = true;
+        mapNode.ActivateNode();
+    }
+
+    public void MoveToMap()
+    {
+
+    }
+
+    public void FinishEncounter()
+    {
+        inEncounter = false;
     }
 }

@@ -17,11 +17,12 @@ public class CreateEncounter : MapNode
     public bool start;
     private bool instantiated;
 
-
+    private Canvas CombatCanvas;
 
     // Start is called before the first frame update
     void Start()
     {
+        CombatCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         if (start)
         {
             Instantiate(units);
@@ -47,22 +48,26 @@ public class CreateEncounter : MapNode
     {
         base.OnMouseDown();
 
-        if (!instantiated)
-        {
-            Instantiate(units);
-            CreateGrid();
-            CreateGameHandler();
-            CreateEnemies();
-            CreateFriendlies();
-            ActivateGameHandler();
-            CreateUI();
-            instantiated = true;
-        }
     }
 
     void CreateGrid()
     {
         Instantiate(grid);
+    }
+
+    public override void ActivateNode()
+    {
+        if (!instantiated)
+        {
+            Instantiate(units);
+            CreateGrid();
+            CreateUI();
+            CreateGameHandler();
+            CreateEnemies();
+            CreateFriendlies();
+            ActivateGameHandler();
+            instantiated = true;
+        }
     }
 
     void CreateGameHandler()
@@ -114,5 +119,6 @@ public class CreateEncounter : MapNode
 
     private void CreateUI()
     {
+        CombatCanvas.enabled = true;
     }
 }

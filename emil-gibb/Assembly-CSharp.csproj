@@ -83,7 +83,7 @@
     <Compile Include="Assets\Scripts\Old\PlayGrid.cs" />
     <Compile Include="Assets\Scripts\Old\Ranged.cs" />
     <Compile Include="Assets\Scripts\Old\Unit.cs" />
-    <Compile Include="Assets\Scripts\Rotation.cs" />
+    <Compile Include="Assets\Scripts\SceneHandler.cs" />
     <Compile Include="Assets\Scripts\SelectedUnitUiHandler.cs" />
     <Compile Include="Assets\Scripts\UnitHandler.cs" />
     <Compile Include="Assets\Scripts\WorldMap.cs" />

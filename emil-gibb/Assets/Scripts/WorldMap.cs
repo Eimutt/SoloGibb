@@ -23,16 +23,19 @@ public class WorldMap : MonoBehaviour
     public GameObject playerCharacterPrefab;
     private GameObject playerCharacterSprite;
 
+    private bool canMove = true;
+    private SceneHandler sceneHandler;
+
     // Start is called before the first frame update
     void Start()
     {
+        sceneHandler = GameObject.Find("Main Camera").GetComponent<SceneHandler>();
         mapNodes = new List<MapNode>();
         generateWorld();
 
         playerCharacterSprite = Instantiate(playerCharacterPrefab, transform);
 
-        MoveTo(mapNodes[0]);
-
+        MoveToStartNode(mapNodes[0]);
     }
 
     // Update is called once per frame
@@ -93,7 +96,7 @@ public class WorldMap : MonoBehaviour
                         pathPart2.transform.localPosition = p1 * 0.66f + p2 * 0.33f;
 
                     }
-                } 
+                }
                 else
                 {
                     var node = Instantiate(NodeBase, transform);
@@ -173,10 +176,27 @@ public class WorldMap : MonoBehaviour
         return pos;
 
     }
-
-    public void MoveTo(MapNode nextNode)
+    public void MoveToStartNode(MapNode nextNode)
     {
         currentLevel = nextNode;
         playerCharacterSprite.transform.position = nextNode.transform.position;
+    }
+
+    public void MoveTo(MapNode nextNode)
+    {
+        if (canMove)
+        {
+            currentLevel = nextNode;
+            playerCharacterSprite.transform.position = nextNode.transform.position;
+
+            sceneHandler.MoveToInteractiveScene(nextNode);
+            canMove = false;
+        }
+
+    }
+
+    public void ActivateMovement()
+    {
+        canMove = true;
     }
 }

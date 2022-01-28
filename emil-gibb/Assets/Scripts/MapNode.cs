@@ -22,20 +22,23 @@ public class MapNode : MonoBehaviour
 
     public virtual void OnMouseDown()
     {
-        print(gameObject.name + " selected");
-
         bool canGoTo = IsReachable();
         if (canGoTo)
         {
-            print("moving");
             worldMap.MoveTo(this);
             //Start encounter or smthing
 
-        } else
+        }
+        else
         {
             print("cant move");
 
         }
+    }
+
+    public virtual void ActivateNode()
+    {
+
     }
 
     protected bool IsReachable()
